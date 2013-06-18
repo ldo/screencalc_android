@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Screencalc</string>
+
+    <string name="calc_incomplete">Couldn’t calculate everything, enter some more</string>
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <color name="unknown_value">#fffcc9</color>
+    <color name="valid_value">#ff7ac074</color>
+    <color name="error_value">#ff817f</color>
+</resources>
