@@ -856,12 +856,10 @@ public class Main extends android.app.Activity
                           }
                         else
                           {
-                            System.err.printf("Field “%s” initially unknown\n", FieldNames.get(FieldID)); /* debug */
                             SetUnknown(FieldID);
                           } /*if*/
                         if (FieldValue != null)
                           {
-                            System.err.printf("Field “%s” initially known\n", FieldNames.get(FieldID)); /* debug */
                             SetValid(FieldID, FieldValue);
                             Known.put(FieldID, FieldValue);
                           } /*if*/
@@ -874,7 +872,6 @@ public class Main extends android.app.Activity
                           {
                             if (!Known.containsKey(FieldID))
                               {
-                                System.err.printf("Field “%s” not yet known\n", FieldNames.get(FieldID)); /* debug */
                                 final ParamDef ThisParam = ParamDefs.get(FieldID);
                                 boolean DidThis = false;
                                 for (int[] ArgNames : ThisParam.Calculate.keySet())
@@ -890,18 +887,6 @@ public class Main extends android.app.Activity
                                       } /*for*/
                                     if (GotAll)
                                       {
-                                          { /* debug */
-                                            System.err.printf("Field “%s” can be determined from ", FieldNames.get(FieldID)); /* debug */
-                                            for (int i = 0; i < ArgNames.length; ++i)
-                                              {
-                                                if (i != 0)
-                                                  {
-                                                    System.err.print(",");
-                                                  } /*if*/
-                                                System.err.printf("“%s”", FieldNames.get(ArgNames[i]));
-                                              } /*for*/
-                                            System.err.println();
-                                          } /* debug */
                                         final double[] Args = new double[ArgNames.length];
                                         for (int i = 0; i < ArgNames.length; ++i)
                                           {
