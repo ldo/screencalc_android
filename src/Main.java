@@ -774,6 +774,15 @@ public class Main extends android.app.Activity
             ColorUnknownValue = Res.getColor(R.color.unknown_value);
             ColorErrorValue = Res.getColor(R.color.error_value);
           }
+        ((android.widget.AutoCompleteTextView)findViewById(R.id.aspect_ratio)).setAdapter
+          (
+            android.widget.ArrayAdapter.createFromResource
+              (
+                /*context =*/ this,
+                /*textArrayResId =*/ R.array.common_aspect_ratios,
+                /*textViewResId*/ android.R.layout.simple_dropdown_item_1line
+              )
+          );
         for
           (
             IDPair This :

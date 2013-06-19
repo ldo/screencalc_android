@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="common_aspect_ratios">
+        <item>2:3</item>
+        <item>3:4</item>
+        <item>9:16</item>
+        <item>5:8</item>
+        <item>9:14</item>
+        <item>1:1</item>
+        <item>4:3</item>
+        <item>14:9</item>
+        <item>8:5</item>
+        <item>16:9</item>
+        <item>3:2</item>
+    </array>
+</resources>
