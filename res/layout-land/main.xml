@@ -40,9 +40,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/height_measure"
             />
             <Button
@@ -56,9 +54,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/height_pixels"
             />
             <Button
@@ -79,9 +75,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/width_measure"
             />
             <Button
@@ -95,9 +89,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/width_pixels"
             />
             <Button
@@ -116,9 +108,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/diag_measure"
             />
             <Button
@@ -139,9 +129,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/pixel_density"
             />
             <Button
@@ -160,9 +148,7 @@
             android:layout_height="wrap_content"
         >
             <EditText
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="100"
+                style="@style/field"
                 android:id="@+id/aspect_ratio"
             />
             <Button
