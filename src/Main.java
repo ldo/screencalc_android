@@ -774,15 +774,20 @@ public class Main extends android.app.Activity
             ColorUnknownValue = Res.getColor(R.color.unknown_value);
             ColorErrorValue = Res.getColor(R.color.error_value);
           }
-        ((android.widget.AutoCompleteTextView)findViewById(R.id.aspect_ratio)).setAdapter
-          (
-            android.widget.ArrayAdapter.createFromResource
+          {
+            final android.widget.AutoCompleteTextView Aspect =
+                (android.widget.AutoCompleteTextView)findViewById(R.id.aspect_ratio);
+            Aspect.setAdapter
               (
-                /*context =*/ this,
-                /*textArrayResId =*/ R.array.common_aspect_ratios,
-                /*textViewResId*/ android.R.layout.simple_dropdown_item_1line
-              )
-          );
+                android.widget.ArrayAdapter.createFromResource
+                  (
+                    /*context =*/ this,
+                    /*textArrayResId =*/ R.array.common_aspect_ratios,
+                    /*textViewResId*/ android.R.layout.simple_dropdown_item_1line
+                  )
+              );
+            Aspect.setThreshold(1);
+          }
         for
           (
             IDPair This :
