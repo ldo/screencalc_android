@@ -7,7 +7,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Default Units:"
+            android:text="@string/default_units"
         />
         <RadioGroup
             android:orientation="horizontal"
@@ -18,13 +18,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/units_cm"
-                android:text="cm"
+                android:text="@string/cm"
             />
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/units_in"
-                android:text="in"
+                android:text="@string/in"
             />
         </RadioGroup>
     </TableRow>
@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Height:"
+            android:text="@string/height"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_height_measure"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
         <LinearLayout
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_height_pixels"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -75,7 +75,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Width:"
+            android:text="@string/width"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_width_measure"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
         <LinearLayout
@@ -110,13 +110,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_width_pixels"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Diagonal:"
+            android:text="@string/diagonal"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -133,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_diag_measure"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -141,7 +141,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Pixel Density:"
+            android:text="@string/pixel_density"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -158,13 +158,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_pixel_density"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Aspect Ratio:"
+            android:text="@string/aspect_ratio"
         />
         <LinearLayout
             android:orientation="horizontal"
@@ -181,7 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_aspect_ratio"
-                android:text="X"
+                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -190,14 +190,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/clear_all"
-                android:text="Clear All"
+                android:text="@string/clear_all"
                 android:layout_column="1"
         />
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/calculate"
-                android:text="Calculate"
+                android:text="@string/calculate"
         />
     </TableRow>
 </TableLayout>

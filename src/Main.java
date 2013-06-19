@@ -650,7 +650,7 @@ public class Main extends android.app.Activity
         final EditText TheField = (EditText)findViewById(FieldID);
         double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : 1.0 / cm_per_in;
         String Suffix = "";
-        String Format = "%.3f";
+        String Format = "%.2f";
         switch (ParamDefs.get(FieldID).Type)
           {
         case TYPE_RATIO:

@@ -3,4 +3,17 @@
     <string name="app_name">Screencalc</string>
 
     <string name="calc_incomplete">Couldn’t calculate everything, enter some more</string>
+
+    <string name="cm">cm</string>
+    <string name="in">in</string>
+    <string name="default_units">Default Units:</string>
+    <string name="height">Height:</string>
+    <string name="width">Width:</string>
+    <string name="diagonal">Diag:</string>
+    <string name="pixel_density">Pixel Dens:</string>
+    <string name="aspect_ratio">Aspect:</string>
+
+    <string name="clr">X</string>
+    <string name="clear_all">Clear All</string>
+    <string name="calculate">Calculate</string>
 </resources>
