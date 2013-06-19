@@ -559,7 +559,7 @@ public class Main extends android.app.Activity
             R.id.width_pixels,
         };
 
-    static final HashMap<Integer, String> FieldNames = new HashMap<Integer, String>(); /* debug */
+    static final HashMap<Integer, String> FieldNames = new HashMap<Integer, String>();
       {
         FieldNames.put(R.id.height_measure, "height");
         FieldNames.put(R.id.width_measure, "width");
@@ -568,24 +568,63 @@ public class Main extends android.app.Activity
         FieldNames.put(R.id.aspect_ratio, "aspect");
         FieldNames.put(R.id.height_pixels, "heightpx");
         FieldNames.put(R.id.width_pixels, "widthpx");
-      } /* debug */
+      }
 
-    private static class IDPair
+    private static class FieldState
       {
-        public final int ID1;
-        public final int ID2;
+        public static enum States
+          {
+            STATE_INPUT(0),
+            STATE_VALID(1),
+            STATE_ERROR(2);
 
-        public IDPair
+            public final int Val;
+
+            private States
+              (
+                int Val
+              )
+              {
+                this.Val = Val;
+              } /*States*/
+
+            public static States ToState
+              (
+                int Val
+              )
+              {
+                States Result = null;
+                for (int i = 0;;)
+                  {
+                    if (values()[i].Val == Val)
+                      {
+                        Result = values()[i];
+                        break;
+                      } /*if*/
+                    ++i;
+                  } /*for*/
+                return
+                    Result;
+              } /*ToState*/
+
+          } /*States*/;
+
+        public final States State;
+        public final String Value;
+
+        public FieldState
           (
-            int ID1,
-            int ID2
+            States State,
+            String Value
           )
           {
-            this.ID1 = ID1;
-            this.ID2 = ID2;
-          } /*IDPair*/
+            this.State = State;
+            this.Value = Value;
+          } /*FieldState*/
 
-      } /*IDPair*/;
+      } /*FieldState*/;
+
+    final HashMap<String, FieldState> FieldStates = new HashMap<String, FieldState>();
 
     private int ColorValidValue, ColorUnknownValue, ColorErrorValue;
 
@@ -596,6 +635,7 @@ public class Main extends android.app.Activity
       {
         final EditText TheField = (EditText)findViewById(FieldID);
         TheField.setText("", TextView.BufferType.EDITABLE);
+        FieldStates.put(FieldNames.get(FieldID), new FieldState(FieldState.States.STATE_INPUT, ""));
         TheField.setFocusable(true);
         TheField.setFocusableInTouchMode(true);
         TheField.setBackgroundColor(ColorUnknownValue);
@@ -636,11 +676,22 @@ public class Main extends android.app.Activity
               } /*switch*/
         break;
           } /*switch*/
-        TheField.setText
+        SetValid(FieldID, String.format(Format, NewValue * Multiplier) + Suffix);
+      } /*SetValid*/
+
+    private void SetValid
+      (
+        int FieldID,
+        String ValueStr
+      )
+      {
+        final EditText TheField = (EditText)findViewById(FieldID);
+        FieldStates.put
           (
-            String.format(Format, NewValue * Multiplier) + Suffix,
-            TextView.BufferType.NORMAL
+            FieldNames.get(FieldID),
+            new FieldState(FieldState.States.STATE_VALID, ValueStr)
           );
+        TheField.setText(ValueStr);
         TheField.setFocusable(false);
         TheField.setBackgroundColor(ColorValidValue);
       } /*SetValid*/
@@ -651,10 +702,32 @@ public class Main extends android.app.Activity
       )
       {
         final EditText TheField = (EditText)findViewById(FieldID);
+        FieldStates.put
+          (
+            FieldNames.get(FieldID),
+            new FieldState(FieldState.States.STATE_ERROR, TheField.getText().toString())
+          );
         TheField.setFocusable(true);
         TheField.setFocusableInTouchMode(true);
         TheField.setBackgroundColor(ColorErrorValue);
       } /*SetError*/
+
+    private static class IDPair
+      {
+        public final int ID1;
+        public final int ID2;
+
+        public IDPair
+          (
+            int ID1,
+            int ID2
+          )
+          {
+            this.ID1 = ID1;
+            this.ID2 = ID2;
+          } /*IDPair*/
+
+      } /*IDPair*/;
 
     private class FieldClearAction implements View.OnClickListener
       {
@@ -689,10 +762,10 @@ public class Main extends android.app.Activity
     @Override
     public void onCreate
       (
-        android.os.Bundle SavedInstanceState
+        android.os.Bundle ToRestore
       )
       {
-        super.onCreate(SavedInstanceState);
+        super.onCreate(ToRestore);
         setContentView(R.layout.main);
           {
             final android.content.res.Resources Res = getResources();
@@ -734,10 +807,13 @@ public class Main extends android.app.Activity
                       } /*onClick*/
                   } /*View.OnClickListener*/
               );
-            ThisButton.setChecked
-              (
-                UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
-              );
+            if (ToRestore == null)
+              {
+                ThisButton.setChecked
+                  (
+                    UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
+                  );
+              } /*if*/
           } /*for*/
         findViewById(R.id.clear_all).setOnClickListener
           (
@@ -865,22 +941,69 @@ public class Main extends android.app.Activity
                   } /*onClick*/
               } /*View.OnClickListener*/
           );
-        ClearAll();
+        if (ToRestore == null)
+          {
+            ClearAll();
+          } /*if*/
       } /*onCreate*/
+
+    @Override
+    public void onSaveInstanceState
+      (
+        android.os.Bundle ToSave
+      )
+      {
+        ToSave.putBoolean("CurUnits", CurUnits == Units.UNITS_CM);
+        for (String FieldName : FieldStates.keySet())
+          {
+            final FieldState ThisField = FieldStates.get(FieldName);
+            ToSave.putInt(FieldName + ".state", ThisField.State.Val);
+            ToSave.putString(FieldName + ".value", ThisField.Value);
+          } /*for*/
+        super.onSaveInstanceState(ToSave);
+      } /*onSaveInstanceState*/
 
     @Override
     public void onRestoreInstanceState
       (
-        android.os.Bundle SavedInstanceState
+        android.os.Bundle ToRestore
       )
       {
-      /* need to repeat setChecked calls to avoid getting out of sync with UI display */
-        for (final int UnitsID : UnitsButtons)
+        super.onRestoreInstanceState(ToRestore);
+        CurUnits = ToRestore.getBoolean("CurUnits") ? Units.UNITS_CM : Units.UNITS_IN;
+        for (int UnitsID : UnitsButtons)
           {
             ((android.widget.RadioButton)findViewById(UnitsID)).setChecked
               (
                 UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
               );
+          } /*for*/
+        for (int FieldID : Fields)
+          {
+            final String FieldName = FieldNames.get(FieldID);
+            final String FieldValue =
+                ToRestore.containsKey(FieldName + ".value") ?
+                    ToRestore.getString(FieldName + ".value")
+                :
+                    "";
+            switch
+              (
+                ToRestore.containsKey(FieldName + ".state") ?
+                    FieldState.States.ToState(ToRestore.getInt(FieldName + ".state"))
+                :
+                    FieldState.States.STATE_INPUT
+              )
+              {
+            case STATE_INPUT:
+                SetUnknown(FieldID);
+            break;
+            case STATE_VALID:
+                SetValid(FieldID, FieldValue);
+            break;
+            case STATE_ERROR:
+                SetError(FieldID);
+            break;
+              } /*switch*/
           } /*for*/
       } /*onRestoreInstanceState*/
 
