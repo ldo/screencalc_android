@@ -583,6 +583,8 @@ public class Main extends android.app.Activity
       {
         final EditText TheField = (EditText)findViewById(FieldID);
         TheField.setText("", TextView.BufferType.EDITABLE);
+        TheField.setFocusable(true);
+        TheField.setFocusableInTouchMode(true);
         TheField.setBackgroundColor(ColorUnknownValue);
       } /*SetUnknown*/
 
@@ -625,6 +627,7 @@ public class Main extends android.app.Activity
             String.format(Format, NewValue * Multiplier) + Suffix,
             TextView.BufferType.NORMAL
           );
+        TheField.setFocusable(false);
         TheField.setBackgroundColor(ColorValidValue);
       } /*SetValid*/
 
@@ -635,6 +638,8 @@ public class Main extends android.app.Activity
       {
         final EditText TheField = (EditText)findViewById(FieldID);
         TheField.setText("", TextView.BufferType.EDITABLE);
+        TheField.setFocusable(true);
+        TheField.setFocusableInTouchMode(true);
         TheField.setBackgroundColor(ColorErrorValue);
       } /*SetError*/
 
