@@ -637,7 +637,6 @@ public class Main extends android.app.Activity
       )
       {
         final EditText TheField = (EditText)findViewById(FieldID);
-        TheField.setText("", TextView.BufferType.EDITABLE);
         TheField.setFocusable(true);
         TheField.setFocusableInTouchMode(true);
         TheField.setBackgroundColor(ColorErrorValue);
