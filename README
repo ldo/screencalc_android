@@ -1,0 +1,21 @@
+Screencalc is an Android application for calculating parameters for a
+display screen: width, height, diagonal, pixel density, aspect
+ratio. Given any of these, it will try to calculate the
+rest. Combinations which will work are:
+     * any 2 of (aspect, diagonal, height, width) plus any 1 of
+       (density, heightpx, widthpx)
+     * aspect + density + (heightpx or widthpx)
+     * all 3 of (density, heightpx, widthpx)
+Discrepancies are not checked if you overspecify.
+
+Contents:
+    src/ -- Java sources for the Android app
+    res/ -- resources for the Android app
+    AndroidManifest.xml, build.xml, *.properties -- for driving
+        Google's Android build tools (note that you will have to
+        provide a couple more of these--see INSTALL for details)
+    README -- this file
+    INSTALL -- build/installation instructions
+    COPYING -- licence (GPLv3)
+
+Lawrence D'Oliveiro <ldo@geek-central.gen.nz>
