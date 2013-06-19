@@ -546,6 +546,8 @@ public class Main extends android.app.Activity
           );
       }
 
+    final int[] UnitsButtons = new int[] {R.id.units_cm, R.id.units_in};
+
     static final int[] Fields =
         {
             R.id.height_measure,
@@ -714,7 +716,7 @@ public class Main extends android.app.Activity
           {
             findViewById(This.ID2).setOnClickListener(new FieldClearAction(This.ID1));
           } /*for*/
-        for (final int UnitsID : new int[] {R.id.units_cm, R.id.units_in})
+        for (final int UnitsID : UnitsButtons)
           {
             final android.widget.RadioButton ThisButton =
                 (android.widget.RadioButton)findViewById(UnitsID);
@@ -864,5 +866,21 @@ public class Main extends android.app.Activity
           );
         ClearAll();
       } /*onCreate*/
+
+    @Override
+    public void onRestoreInstanceState
+      (
+        android.os.Bundle SavedInstanceState
+      )
+      {
+      /* need to repeat setChecked calls to avoid getting out of sync with UI display */
+        for (final int UnitsID : UnitsButtons)
+          {
+            ((android.widget.RadioButton)findViewById(UnitsID)).setChecked
+              (
+                UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
+              );
+          } /*for*/
+      } /*onRestoreInstanceState*/
 
   } /*Main*/;
