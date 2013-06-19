@@ -46,10 +46,8 @@
                 android:id="@+id/height_measure"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_height_measure"
-                android:text="@string/clr"
             />
         </LinearLayout>
         <LinearLayout
@@ -64,10 +62,8 @@
                 android:id="@+id/height_pixels"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_height_pixels"
-                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -89,10 +85,8 @@
                 android:id="@+id/width_measure"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_width_measure"
-                android:text="@string/clr"
             />
         </LinearLayout>
         <LinearLayout
@@ -107,10 +101,8 @@
                 android:id="@+id/width_pixels"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_width_pixels"
-                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -132,10 +124,8 @@
                 android:id="@+id/diag_measure"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_diag_measure"
-                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -157,10 +147,8 @@
                 android:id="@+id/pixel_density"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_pixel_density"
-                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
@@ -182,10 +170,8 @@
                 android:id="@+id/aspect_ratio"
             />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/clr_button"
                 android:id="@+id/clear_aspect_ratio"
-                android:text="@string/clr"
             />
         </LinearLayout>
     </TableRow>
