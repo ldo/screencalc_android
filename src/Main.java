@@ -614,13 +614,14 @@ public class Main extends android.app.Activity
         switch (ParamDefs.get(FieldID).Type)
           {
         case TYPE_RATIO:
-          /* leave for now */
+            Multiplier = 1.0;
         break;
         case TYPE_MEASURE:
             Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
         break;
         case TYPE_PIXELS:
             Format = "%.0f";
+            Multiplier = 1.0;
         break;
         case TYPE_DENSITY:
             switch (CurUnits)
