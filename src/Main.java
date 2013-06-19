@@ -664,6 +664,7 @@ public class Main extends android.app.Activity
             Multiplier = 1.0;
         break;
         case TYPE_DENSITY:
+            Format = "%.1f";
             switch (CurUnits)
               {
             case UNITS_CM:
