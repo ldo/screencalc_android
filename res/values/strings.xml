@@ -9,8 +9,8 @@
     <string name="default_units">Default Units:</string>
     <string name="height">Height:</string>
     <string name="width">Width:</string>
-    <string name="diagonal">Diag:</string>
-    <string name="pixel_density">Pixel Dens:</string>
+    <string name="diagonal">Diagonal:</string>
+    <string name="pixel_density">Pixel Density:</string>
     <string name="aspect_ratio">Aspect:</string>
 
     <string name="clear_all">Clear All</string>
