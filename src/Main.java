@@ -25,550 +25,14 @@ import java.util.HashMap;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
+import static nz.gen.geek_central.screencalc.Rules.FieldName;
+import static nz.gen.geek_central.screencalc.Rules.Units;
 
 public class Main extends android.app.Activity
   {
-  /* worth comparing the relative complexity of setting up the calculation rules
-    here in Java versus the Python version at <https://github.com/ldo/screencalc> */
 
-    static enum FieldName
-      {
-        HeightMeasure("height"),
-        WidthMeasure("width"),
-        DiagMeasure("diagonal"),
-        PixelDensity("density"),
-        AspectRatio("aspect"),
-        HeightPixels("heightpx"),
-        WidthPixels("widthpx");
-
-        public final String Name;
-
-        private FieldName
-          (
-            String Name
-          )
-          {
-            this.Name = Name.intern();
-          } /*FieldName*/
-
-      } /*FieldName*/;
-
-    static final double cm_per_in = 2.54;
-
-    static enum Units
-      {
-        UNITS_CM,
-        UNITS_IN,
-      };
-
-    static double AspectDiag
-      (
-        double Aspect
-      )
-      /* returns the ratio of the diagonal to the width. */
-      {
-        return
-            Math.hypot(1.0, Aspect);
-      } /*AspectDiag*/
-
-    interface Parser
-      {
-
-        public double Parse
-          (
-            String s
-          );
-
-      } /*Parser*/;
-
-    static class ParseInt implements Parser
-      {
-
-        public double Parse
-          (
-            String s
-          )
-          {
-            return
-                Integer.parseInt(s);
-          } /*Parse*/
-
-      } /*ParseInt*/;
-
-    class ParseDensity implements Parser
-      {
-
-        public double Parse
-          (
-            String s
-          )
-          /* always returns dots per cm. */
-          {
-            boolean IsDPI = CurUnits == Units.UNITS_IN; /* default */
-            s = s.toLowerCase();
-            if (s.endsWith("dpcm"))
-              {
-                IsDPI = false;
-                s = s.substring(0, s.length() - 4);
-              }
-            else if (s.endsWith("dpi"))
-              {
-                IsDPI = true;
-                s = s.substring(0, s.length() - 3);
-              } /*if*/
-            return
-                Double.parseDouble(s) / (IsDPI ? cm_per_in : 1.0);
-          } /*Parse*/
-
-      } /*ParseDensity*/;
-
-    class ParseMeasure implements Parser
-      {
-        private class Unit
-          {
-            public final String Name;
-            public final double Multiplier;
-
-            public Unit
-              (
-                String Name,
-                double Multiplier
-              )
-              {
-                this.Name = Name;
-                this.Multiplier = Multiplier;
-              } /*Unit*/
-
-          } /*Unit*/;
-
-        public double Parse
-          (
-            String s
-          )
-          {
-            double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : cm_per_in;
-            s = s.toLowerCase();
-            for
-              (
-                Unit This :
-                    new Unit[]
-                        {
-                            new Unit("cm", 1.0),
-                            new Unit("mm", 0.1),
-                            new Unit("in", cm_per_in),
-                        }
-              )
-              {
-                if (s.endsWith(This.Name))
-                  {
-                    s = s.substring(0, s.length() - This.Name.length());
-                    Multiplier = This.Multiplier;
-                    break;
-                  } /*if*/
-              } /*for*/
-            return
-                Double.parseDouble(s) * Multiplier;
-          } /*Parse*/
-
-      } /*ParseMeasure*/;
-
-    static class ParseRatio implements Parser
-      {
-
-        public double Parse
-          (
-            String s
-          )
-          {
-            final int SepPos = s.indexOf(":");
-            final double Result;
-            if (SepPos >= 0)
-              {
-                final double Numer = Integer.parseInt(s.substring(0, SepPos));
-                final double Denom = Integer.parseInt(s.substring(SepPos + 1, s.length()));
-                Result = Numer / Denom;
-              }
-            else
-              {
-                Result = Double.parseDouble(s);
-              } /*if*/
-            return
-                Result;
-          } /*Parse*/
-
-      } /*ParseRatio*/;
-
-    interface CalcFunction
-      {
-
-        public double Calculate
-          (
-            double[] Args
-          );
-
-      } /*CalcFunction*/;
-
-    static class ParamDef
-      {
-        public static enum ParamTypes
-          {
-            TYPE_RATIO,
-            TYPE_MEASURE,
-            TYPE_PIXELS,
-            TYPE_DENSITY,
-          };
-        public final ParamTypes Type;
-        public final Parser Parse;
-        public final HashMap<FieldName[], CalcFunction> Calculate = new HashMap<FieldName[], CalcFunction>();
-
-        public static class Entry
-          {
-            public final FieldName[] ArgNames;
-            public final CalcFunction Calc;
-
-            public Entry
-              (
-                FieldName[] ArgNames,
-                CalcFunction Calc
-              )
-              {
-                this.ArgNames = ArgNames;
-                this.Calc = Calc;
-              } /*Entry*/
-
-          } /*Entry*/;
-
-        public ParamDef
-          (
-            ParamTypes Type,
-            Parser Parse,
-            Entry[] Calculate
-          )
-          {
-            this.Type = Type;
-            this.Parse = Parse;
-            for (Entry ThisEntry : Calculate)
-              {
-                this.Calculate.put(ThisEntry.ArgNames, ThisEntry.Calc);
-              } /*for*/
-          } /*ParamDef*/
-
-      } /*ParamDef*/;
-
-    final HashMap<FieldName, ParamDef> ParamDefs = new HashMap<FieldName, ParamDef>();
-      {
-        ParamDefs.put
-          (
-            FieldName.HeightMeasure,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.DiagMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / AspectDiag(Args[0]) * Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightPixels},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.DiagMeasure, FieldName.WidthMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Math.sqrt(Args[0] * Args[0] - Args[1] * Args[1]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.WidthMeasure,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.DiagMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / AspectDiag(Args[0]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthPixels},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.DiagMeasure, FieldName.HeightMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Math.sqrt(Args[0] * Args[0] - Args[1] * Args[1]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.DiagMeasure,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.HeightMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / Args[0] * AspectDiag(Args[0]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.WidthMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] * AspectDiag(Args[0]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.WidthMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Math.hypot(Args[0], Args[1]);
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.HeightPixels,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_PIXELS,
-                /*Parse =*/ new ParseInt(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] * Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.WidthPixels,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_PIXELS,
-                /*Parse =*/ new ParseInt(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthMeasure},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] * Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.PixelDensity,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_DENSITY,
-                /*Parse =*/ new ParseDensity(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.HeightPixels},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.WidthMeasure, FieldName.WidthPixels},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[1] / Args[0];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-        ParamDefs.put
-          (
-            FieldName.AspectRatio,
-            new ParamDef
-              (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_RATIO,
-                /*Parse =*/ new ParseRatio(),
-                /*Calculate =*/ new ParamDef.Entry[]
-                    {
-                        new ParamDef.Entry
-                          (
-                            /*ArgNames =*/ new FieldName[] {FieldName.HeightPixels, FieldName.WidthPixels},
-                            /*Calc =*/
-                                new CalcFunction()
-                                  {
-                                    public double Calculate
-                                      (
-                                        double[] Args
-                                      )
-                                      {
-                                        return
-                                            Args[0] / Args[1];
-                                      } /*Calculate*/
-                                  } /*CalcFunction*/
-                          ),
-                    }
-              )
-          );
-      }
-
+    final Rules CurRules = new Rules();
     final int[] UnitsButtons = new int[] {R.id.units_cm, R.id.units_in};
-    Units CurUnits = Units.UNITS_CM; /* no relevant locale setting? */
 
     static class FieldDef
       {
@@ -624,45 +88,6 @@ public class Main extends android.app.Activity
             new FieldDef(R.id.width_pixels, R.id.clear_width_pixels)
           );
       }
-
-    public String FormatField
-      (
-        FieldName Name,
-        double FieldValue
-      )
-      {
-        double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : 1.0 / cm_per_in;
-        String Suffix = "";
-        String Format = "%.2f";
-        switch (ParamDefs.get(Name).Type)
-          {
-        case TYPE_RATIO:
-            Multiplier = 1.0;
-        break;
-        case TYPE_MEASURE:
-            Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
-        break;
-        case TYPE_PIXELS:
-            Format = "%.0f";
-            Multiplier = 1.0;
-        break;
-        case TYPE_DENSITY:
-            Format = "%.1f";
-            switch (CurUnits)
-              {
-            case UNITS_CM:
-                Suffix = "dpcm";
-            break;
-            case UNITS_IN:
-                Multiplier = cm_per_in;
-                Suffix = "dpi";
-            break;
-              } /*switch*/
-        break;
-          } /*switch*/
-        return
-            String.format(Format, FieldValue * Multiplier) + Suffix;
-      } /*FormatField*/
 
     private static class FieldState
       {
@@ -773,7 +198,7 @@ public class Main extends android.app.Activity
         double NewValue
       )
       {
-        SetField(Name, FieldState.States.STATE_VALID, FormatField(Name, NewValue));
+        SetField(Name, FieldState.States.STATE_VALID, CurRules.FormatField(Name, NewValue));
       } /*SetValid*/
 
     private void SetValid
@@ -869,7 +294,7 @@ public class Main extends android.app.Activity
                         View TheButton
                       )
                       {
-                        CurUnits = UnitsID == R.id.units_cm ? Units.UNITS_CM : Units.UNITS_IN;
+                        CurRules.CurUnits = UnitsID == R.id.units_cm ? Units.UNITS_CM : Units.UNITS_IN;
                       } /*onClick*/
                   } /*View.OnClickListener*/
               );
@@ -877,7 +302,7 @@ public class Main extends android.app.Activity
               {
                 ThisButton.setChecked
                   (
-                    UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
+                    UnitsID == (CurRules.CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
                   );
               } /*if*/
           } /*for*/
@@ -913,7 +338,7 @@ public class Main extends android.app.Activity
                           {
                             try
                               {
-                                FieldValue = ParamDefs.get(Name).Parse.Parse(FieldStr);
+                                FieldValue = CurRules.ParamDefs.get(Name).Parse.Parse(FieldStr);
                               }
                             catch (NumberFormatException Bad)
                               {
@@ -930,65 +355,21 @@ public class Main extends android.app.Activity
                             Known.put(Name, FieldValue);
                           } /*if*/
                       } /*for*/
-                    for (;;)
+                    final java.util.HashSet<FieldName> Computed = new java.util.HashSet<FieldName>();
+                    final Rules.ComputeStatus Status = CurRules.ComputeParams(Known, Computed);
+                    for (FieldName Name : Computed)
                       {
-                        boolean DidSomething = false;
-                        boolean LeftUndone = false;
-                        for (FieldName Name : FieldName.values())
-                          {
-                            if (!Known.containsKey(Name))
-                              {
-                                final ParamDef ThisParam = ParamDefs.get(Name);
-                                boolean DidThis = false;
-                                for (FieldName[] ArgNames : ThisParam.Calculate.keySet())
-                                  {
-                                    boolean GotAll = true; /* to begin with */
-                                    for (FieldName ArgName : ArgNames)
-                                      {
-                                        if (!Known.containsKey(ArgName))
-                                          {
-                                            GotAll = false;
-                                            break;
-                                          } /*if*/
-                                      } /*for*/
-                                    if (GotAll)
-                                      {
-                                        final double[] Args = new double[ArgNames.length];
-                                        for (int i = 0; i < ArgNames.length; ++i)
-                                          {
-                                            Args[i] = Known.get(ArgNames[i]);
-                                          } /*for*/
-                                        final double FieldValue =
-                                            ThisParam.Calculate.get(ArgNames).Calculate(Args);
-                                        Known.put(Name, FieldValue);
-                                        SetValid(Name, FieldValue);
-                                        DidThis = true;
-                                        break;
-                                      } /*if*/
-                                  } /*for*/
-                                if (DidThis)
-                                  {
-                                    DidSomething = true;
-                                  }
-                                else
-                                  {
-                                    LeftUndone = true;
-                                  } /*if*/
-                              } /*if*/
-                          } /*for*/
-                        if (!LeftUndone)
-                            break;
-                        if (!DidSomething)
-                          {
-                            android.widget.Toast.makeText
-                              (
-                                /*context =*/ Main.this,
-                                /*text =*/ R.string.calc_incomplete,
-                                /*duration =*/ android.widget.Toast.LENGTH_SHORT
-                              ).show();
-                            break;
-                          } /*if*/
+                        SetValid(Name, Known.get(Name));
                       } /*for*/
+                    if (Status != Rules.ComputeStatus.COMPUTE_DONE)
+                      {
+                        android.widget.Toast.makeText
+                          (
+                            /*context =*/ Main.this,
+                            /*text =*/ R.string.calc_incomplete,
+                            /*duration =*/ android.widget.Toast.LENGTH_SHORT
+                          ).show();
+                      } /*if*/
                   } /*onClick*/
               } /*View.OnClickListener*/
           );
@@ -1004,7 +385,7 @@ public class Main extends android.app.Activity
         android.os.Bundle ToSave
       )
       {
-        ToSave.putBoolean("CurUnits", CurUnits == Units.UNITS_CM);
+        ToSave.putBoolean("CurUnits", CurRules.CurUnits == Units.UNITS_CM);
         for (FieldName Name : FieldName.values())
           {
             final FieldState ThisField = FieldStates.get(Name);
@@ -1021,12 +402,12 @@ public class Main extends android.app.Activity
       )
       {
         super.onRestoreInstanceState(ToRestore);
-        CurUnits = ToRestore.getBoolean("CurUnits") ? Units.UNITS_CM : Units.UNITS_IN;
+        CurRules.CurUnits = ToRestore.getBoolean("CurUnits") ? Units.UNITS_CM : Units.UNITS_IN;
         for (int UnitsID : UnitsButtons)
           {
             ((android.widget.RadioButton)findViewById(UnitsID)).setChecked
               (
-                UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
+                UnitsID == (CurRules.CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
               );
           } /*for*/
         for (FieldName Name : FieldName.values())
