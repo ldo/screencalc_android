@@ -5,18 +5,17 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">100</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/standard_text</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
     <style name="clr_button" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">40dp</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginRight">10dp</item>
-        <item name="android:textColor">@color/standard_text</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
         <item name="android:text">@string/clr</item>
     </style>
 
-    <color name="standard_text">#ff000000</color>
     <color name="unknown_value">#fffcc9</color>
     <color name="valid_value">#ff7ac074</color>
     <color name="error_value">#ff817f</color>
