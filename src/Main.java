@@ -31,6 +31,28 @@ public class Main extends android.app.Activity
   /* worth comparing the relative complexity of setting up the calculation rules
     here in Java versus the Python version at <https://github.com/ldo/screencalc> */
 
+    static enum FieldName
+      {
+        HeightMeasure("height"),
+        WidthMeasure("width"),
+        DiagMeasure("diagonal"),
+        PixelDensity("density"),
+        AspectRatio("aspect"),
+        HeightPixels("heightpx"),
+        WidthPixels("widthpx");
+
+        public final String Name;
+
+        private FieldName
+          (
+            String Name
+          )
+          {
+            this.Name = Name.intern();
+          } /*FieldName*/
+
+      } /*FieldName*/;
+
     static final double cm_per_in = 2.54;
 
     static enum Units
@@ -38,7 +60,6 @@ public class Main extends android.app.Activity
         UNITS_CM,
         UNITS_IN,
       };
-    Units CurUnits = Units.UNITS_CM; /* no relevant locale setting? */
 
     static double AspectDiag
       (
@@ -198,16 +219,16 @@ public class Main extends android.app.Activity
           };
         public final ParamTypes Type;
         public final Parser Parse;
-        public final HashMap<int[], CalcFunction> Calculate = new HashMap<int[], CalcFunction>();
+        public final HashMap<FieldName[], CalcFunction> Calculate = new HashMap<FieldName[], CalcFunction>();
 
         public static class Entry
           {
-            public final int[] ArgNames;
+            public final FieldName[] ArgNames;
             public final CalcFunction Calc;
 
             public Entry
               (
-                int[] ArgNames,
+                FieldName[] ArgNames,
                 CalcFunction Calc
               )
               {
@@ -234,11 +255,11 @@ public class Main extends android.app.Activity
 
       } /*ParamDef*/;
 
-    final HashMap<Integer, ParamDef> ParamDefs = new HashMap<Integer, ParamDef>();
+    final HashMap<FieldName, ParamDef> ParamDefs = new HashMap<FieldName, ParamDef>();
       {
         ParamDefs.put
           (
-            R.id.height_measure,
+            FieldName.HeightMeasure,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
@@ -247,7 +268,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.aspect_ratio, R.id.diag_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.DiagMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -263,7 +284,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.pixel_density, R.id.height_pixels},
+                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightPixels},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -279,7 +300,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.diag_measure, R.id.width_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.DiagMeasure, FieldName.WidthMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -298,7 +319,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.width_measure,
+            FieldName.WidthMeasure,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
@@ -307,7 +328,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.aspect_ratio, R.id.diag_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.DiagMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -323,7 +344,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.pixel_density, R.id.width_pixels},
+                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthPixels},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -339,7 +360,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.diag_measure, R.id.height_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.DiagMeasure, FieldName.HeightMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -358,7 +379,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.diag_measure,
+            FieldName.DiagMeasure,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
@@ -367,7 +388,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.aspect_ratio, R.id.height_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.HeightMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -383,7 +404,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.aspect_ratio, R.id.width_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.WidthMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -399,7 +420,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.height_measure, R.id.width_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.WidthMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -418,7 +439,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.height_pixels,
+            FieldName.HeightPixels,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_PIXELS,
@@ -427,7 +448,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.pixel_density, R.id.height_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -446,7 +467,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.width_pixels,
+            FieldName.WidthPixels,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_PIXELS,
@@ -455,7 +476,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.pixel_density, R.id.width_measure},
+                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthMeasure},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -474,7 +495,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.pixel_density,
+            FieldName.PixelDensity,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_DENSITY,
@@ -483,7 +504,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.height_measure, R.id.height_pixels},
+                            /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.HeightPixels},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -499,7 +520,7 @@ public class Main extends android.app.Activity
                           ),
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.width_measure, R.id.width_pixels},
+                            /*ArgNames =*/ new FieldName[] {FieldName.WidthMeasure, FieldName.WidthPixels},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -518,7 +539,7 @@ public class Main extends android.app.Activity
           );
         ParamDefs.put
           (
-            R.id.aspect_ratio,
+            FieldName.AspectRatio,
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_RATIO,
@@ -527,7 +548,7 @@ public class Main extends android.app.Activity
                     {
                         new ParamDef.Entry
                           (
-                            /*ArgNames =*/ new int[] {R.id.height_pixels, R.id.width_pixels},
+                            /*ArgNames =*/ new FieldName[] {FieldName.HeightPixels, FieldName.WidthPixels},
                             /*Calc =*/
                                 new CalcFunction()
                                   {
@@ -547,28 +568,101 @@ public class Main extends android.app.Activity
       }
 
     final int[] UnitsButtons = new int[] {R.id.units_cm, R.id.units_in};
+    Units CurUnits = Units.UNITS_CM; /* no relevant locale setting? */
 
-    static final int[] Fields =
-        {
-            R.id.height_measure,
-            R.id.width_measure,
-            R.id.diag_measure,
-            R.id.pixel_density,
-            R.id.aspect_ratio,
-            R.id.height_pixels,
-            R.id.width_pixels,
-        };
-
-    static final HashMap<Integer, String> FieldNames = new HashMap<Integer, String>();
+    static class FieldDef
       {
-        FieldNames.put(R.id.height_measure, "height");
-        FieldNames.put(R.id.width_measure, "width");
-        FieldNames.put(R.id.diag_measure, "diagonal");
-        FieldNames.put(R.id.pixel_density, "density");
-        FieldNames.put(R.id.aspect_ratio, "aspect");
-        FieldNames.put(R.id.height_pixels, "heightpx");
-        FieldNames.put(R.id.width_pixels, "widthpx");
+        public final int FieldID, ClearButtonID;
+
+        public FieldDef
+          (
+            int FieldID,
+            int ClearButtonID
+          )
+          {
+            this.FieldID = FieldID;
+            this.ClearButtonID = ClearButtonID;
+          } /*FieldDef*/
+
+      } /*FieldDef*/;
+
+    static final HashMap<FieldName, FieldDef> FieldDefs = new HashMap<FieldName, FieldDef>();
+      {
+        FieldDefs.put
+          (
+            FieldName.HeightMeasure,
+            new FieldDef(R.id.height_measure, R.id.clear_height_measure)
+          );
+        FieldDefs.put
+          (
+            FieldName.WidthMeasure,
+            new FieldDef(R.id.width_measure, R.id.clear_width_measure)
+          );
+        FieldDefs.put
+          (
+            FieldName.DiagMeasure,
+            new FieldDef(R.id.diag_measure, R.id.clear_diag_measure)
+          );
+        FieldDefs.put
+          (
+            FieldName.PixelDensity,
+            new FieldDef(R.id.pixel_density, R.id.clear_pixel_density)
+          );
+        FieldDefs.put
+          (
+            FieldName.AspectRatio,
+            new FieldDef(R.id.aspect_ratio, R.id.clear_aspect_ratio)
+          );
+        FieldDefs.put
+          (
+            FieldName.HeightPixels,
+            new FieldDef(R.id.height_pixels, R.id.clear_height_pixels)
+          );
+        FieldDefs.put
+          (
+            FieldName.WidthPixels,
+            new FieldDef(R.id.width_pixels, R.id.clear_width_pixels)
+          );
       }
+
+    public String FormatField
+      (
+        FieldName Name,
+        double FieldValue
+      )
+      {
+        double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : 1.0 / cm_per_in;
+        String Suffix = "";
+        String Format = "%.2f";
+        switch (ParamDefs.get(Name).Type)
+          {
+        case TYPE_RATIO:
+            Multiplier = 1.0;
+        break;
+        case TYPE_MEASURE:
+            Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
+        break;
+        case TYPE_PIXELS:
+            Format = "%.0f";
+            Multiplier = 1.0;
+        break;
+        case TYPE_DENSITY:
+            Format = "%.1f";
+            switch (CurUnits)
+              {
+            case UNITS_CM:
+                Suffix = "dpcm";
+            break;
+            case UNITS_IN:
+                Multiplier = cm_per_in;
+                Suffix = "dpi";
+            break;
+              } /*switch*/
+        break;
+          } /*switch*/
+        return
+            String.format(Format, FieldValue * Multiplier) + Suffix;
+      } /*FormatField*/
 
     private static class FieldState
       {
@@ -624,122 +718,91 @@ public class Main extends android.app.Activity
 
       } /*FieldState*/;
 
-    final HashMap<String, FieldState> FieldStates = new HashMap<String, FieldState>();
+    final HashMap<FieldName, FieldState> FieldStates = new HashMap<FieldName, FieldState>();
 
     private int ColorValidValue, ColorUnknownValue, ColorErrorValue;
 
-    private void SetUnknown
+    private void SetField
       (
-        int FieldID
+        FieldName Name,
+        FieldState.States NewState,
+        String NewValue /* only for STATE_VALID */
       )
       {
-        final EditText TheField = (EditText)findViewById(FieldID);
-        TheField.setText("", TextView.BufferType.EDITABLE);
-        FieldStates.put(FieldNames.get(FieldID), new FieldState(FieldState.States.STATE_INPUT, ""));
-        TheField.setFocusable(true);
-        TheField.setFocusableInTouchMode(true);
-        TheField.setBackgroundColor(ColorUnknownValue);
+        final FieldDef TheField = FieldDefs.get(Name);
+        final EditText EditField = (EditText)findViewById(TheField.FieldID);
+        int FieldColor = ColorErrorValue;
+        switch (NewState)
+          {
+        case STATE_INPUT:
+            NewValue = "";
+            EditField.setText("");
+            FieldColor = ColorUnknownValue;
+        break;
+        case STATE_VALID:
+            EditField.setText(NewValue);
+            FieldColor = ColorValidValue;
+        break;
+        case STATE_ERROR:
+            NewValue = EditField.getText().toString(); /* keep existing value */
+            FieldColor = ColorErrorValue;
+        break;
+          } /*switch*/
+        EditField.setBackgroundColor(FieldColor);
+        EditField.setFocusable(NewState != FieldState.States.STATE_VALID);
+        EditField.setFocusableInTouchMode(NewState != FieldState.States.STATE_VALID);
+        findViewById(TheField.ClearButtonID)
+            .setVisibility
+              (
+                NewState == FieldState.States.STATE_VALID ? View.VISIBLE : View.INVISIBLE
+              );
+        FieldStates.put(Name, new FieldState(NewState, NewValue));
+      } /*SetField*/
+
+    private void SetUnknown
+      (
+        FieldName Name
+      )
+      {
+        SetField(Name, FieldState.States.STATE_INPUT, null);
       } /*SetUnknown*/
 
     private void SetValid
       (
-        int FieldID,
+        FieldName Name,
         double NewValue
       )
       {
-        final EditText TheField = (EditText)findViewById(FieldID);
-        double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : 1.0 / cm_per_in;
-        String Suffix = "";
-        String Format = "%.2f";
-        switch (ParamDefs.get(FieldID).Type)
-          {
-        case TYPE_RATIO:
-            Multiplier = 1.0;
-        break;
-        case TYPE_MEASURE:
-            Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
-        break;
-        case TYPE_PIXELS:
-            Format = "%.0f";
-            Multiplier = 1.0;
-        break;
-        case TYPE_DENSITY:
-            Format = "%.1f";
-            switch (CurUnits)
-              {
-            case UNITS_CM:
-                Suffix = "dpcm";
-            break;
-            case UNITS_IN:
-                Multiplier = cm_per_in;
-                Suffix = "dpi";
-            break;
-              } /*switch*/
-        break;
-          } /*switch*/
-        SetValid(FieldID, String.format(Format, NewValue * Multiplier) + Suffix);
+        SetField(Name, FieldState.States.STATE_VALID, FormatField(Name, NewValue));
       } /*SetValid*/
 
     private void SetValid
       (
-        int FieldID,
+        FieldName Name,
         String ValueStr
       )
       {
-        final EditText TheField = (EditText)findViewById(FieldID);
-        FieldStates.put
-          (
-            FieldNames.get(FieldID),
-            new FieldState(FieldState.States.STATE_VALID, ValueStr)
-          );
-        TheField.setText(ValueStr);
-        TheField.setFocusable(false);
-        TheField.setBackgroundColor(ColorValidValue);
+        SetField(Name, FieldState.States.STATE_VALID, ValueStr);
       } /*SetValid*/
 
     private void SetError
       (
-        int FieldID
+        FieldName Name
       )
       {
-        final EditText TheField = (EditText)findViewById(FieldID);
-        FieldStates.put
-          (
-            FieldNames.get(FieldID),
-            new FieldState(FieldState.States.STATE_ERROR, TheField.getText().toString())
-          );
-        TheField.setFocusable(true);
-        TheField.setFocusableInTouchMode(true);
-        TheField.setBackgroundColor(ColorErrorValue);
+        SetField(Name, FieldState.States.STATE_ERROR, null);
       } /*SetError*/
-
-    private static class IDPair
-      {
-        public final int ID1;
-        public final int ID2;
-
-        public IDPair
-          (
-            int ID1,
-            int ID2
-          )
-          {
-            this.ID1 = ID1;
-            this.ID2 = ID2;
-          } /*IDPair*/
-
-      } /*IDPair*/;
 
     private class FieldClearAction implements View.OnClickListener
       {
-        final int FieldID;
+        final FieldName Field;
 
         public FieldClearAction
           (
-            int FieldID
+            FieldName Field
           )
           {
-            this.FieldID = FieldID;
+            this.Field = Field;
           } /*FieldClearAction*/
 
         public void onClick
@@ -747,16 +810,16 @@ public class Main extends android.app.Activity
             View ClearButton
           )
           {
-            SetUnknown(FieldID);
+            SetUnknown(Field);
           } /*onClick*/
 
       } /*FieldClearAction*/;
 
     private void ClearAll()
       {
-        for (int FieldID : Fields)
+        for (FieldName Field : FieldName.values())
           {
-            SetUnknown(FieldID);
+            SetUnknown(Field);
           } /*for*/
       } /*ClearAll*/
 
@@ -788,22 +851,10 @@ public class Main extends android.app.Activity
               );
             Aspect.setThreshold(1);
           }
-        for
-          (
-            IDPair This :
-                new IDPair[]
-                    {
-                        new IDPair(R.id.height_measure, R.id.clear_height_measure),
-                        new IDPair(R.id.width_measure, R.id.clear_width_measure),
-                        new IDPair(R.id.diag_measure, R.id.clear_diag_measure),
-                        new IDPair(R.id.pixel_density, R.id.clear_pixel_density),
-                        new IDPair(R.id.aspect_ratio, R.id.clear_aspect_ratio),
-                        new IDPair(R.id.height_pixels, R.id.clear_height_pixels),
-                        new IDPair(R.id.width_pixels, R.id.clear_width_pixels),
-                    }
-          )
+        for (FieldName Name : FieldName.values())
           {
-            findViewById(This.ID2).setOnClickListener(new FieldClearAction(This.ID1));
+            findViewById(FieldDefs.get(Name).ClearButtonID)
+                .setOnClickListener(new FieldClearAction(Name));
           } /*for*/
         for (final int UnitsID : UnitsButtons)
           {
@@ -852,47 +903,47 @@ public class Main extends android.app.Activity
                     View TheButton
                   )
                   {
-                    final HashMap<Integer, Double> Known = new HashMap<Integer, Double>();
-                    for (int FieldID : Fields)
+                    final HashMap<FieldName, Double> Known = new HashMap<FieldName, Double>();
+                    for (FieldName Name : FieldName.values())
                       {
                         Double FieldValue = null;
                         final String FieldStr =
-                            ((TextView)findViewById(FieldID)).getText().toString();
+                            ((TextView)findViewById(FieldDefs.get(Name).FieldID)).getText().toString();
                         if (FieldStr.length() != 0)
                           {
                             try
                               {
-                                FieldValue = ParamDefs.get(FieldID).Parse.Parse(FieldStr);
+                                FieldValue = ParamDefs.get(Name).Parse.Parse(FieldStr);
                               }
                             catch (NumberFormatException Bad)
                               {
-                                SetError(FieldID);
+                                SetError(Name);
                               } /*try*/
                           }
                         else
                           {
-                            SetUnknown(FieldID);
+                            SetUnknown(Name);
                           } /*if*/
                         if (FieldValue != null)
                           {
-                            SetValid(FieldID, FieldValue);
-                            Known.put(FieldID, FieldValue);
+                            SetValid(Name, FieldValue);
+                            Known.put(Name, FieldValue);
                           } /*if*/
                       } /*for*/
                     for (;;)
                       {
                         boolean DidSomething = false;
                         boolean LeftUndone = false;
-                        for (int FieldID : Fields)
+                        for (FieldName Name : FieldName.values())
                           {
-                            if (!Known.containsKey(FieldID))
+                            if (!Known.containsKey(Name))
                               {
-                                final ParamDef ThisParam = ParamDefs.get(FieldID);
+                                final ParamDef ThisParam = ParamDefs.get(Name);
                                 boolean DidThis = false;
-                                for (int[] ArgNames : ThisParam.Calculate.keySet())
+                                for (FieldName[] ArgNames : ThisParam.Calculate.keySet())
                                   {
                                     boolean GotAll = true; /* to begin with */
-                                    for (int ArgName : ArgNames)
+                                    for (FieldName ArgName : ArgNames)
                                       {
                                         if (!Known.containsKey(ArgName))
                                           {
@@ -909,8 +960,8 @@ public class Main extends android.app.Activity
                                           } /*for*/
                                         final double FieldValue =
                                             ThisParam.Calculate.get(ArgNames).Calculate(Args);
-                                        Known.put(FieldID, FieldValue);
-                                        SetValid(FieldID, FieldValue);
+                                        Known.put(Name, FieldValue);
+                                        SetValid(Name, FieldValue);
                                         DidThis = true;
                                         break;
                                       } /*if*/
@@ -954,11 +1005,11 @@ public class Main extends android.app.Activity
       )
       {
         ToSave.putBoolean("CurUnits", CurUnits == Units.UNITS_CM);
-        for (String FieldName : FieldStates.keySet())
+        for (FieldName Name : FieldName.values())
           {
-            final FieldState ThisField = FieldStates.get(FieldName);
-            ToSave.putInt(FieldName + ".state", ThisField.State.Val);
-            ToSave.putString(FieldName + ".value", ThisField.Value);
+            final FieldState ThisField = FieldStates.get(Name);
+            ToSave.putInt(Name.Name + ".state", ThisField.State.Val);
+            ToSave.putString(Name.Name + ".value", ThisField.Value);
           } /*for*/
         super.onSaveInstanceState(ToSave);
       } /*onSaveInstanceState*/
@@ -978,32 +1029,22 @@ public class Main extends android.app.Activity
                 UnitsID == (CurUnits == Units.UNITS_CM ? R.id.units_cm : R.id.units_in)
               );
           } /*for*/
-        for (int FieldID : Fields)
+        for (FieldName Name : FieldName.values())
           {
-            final String FieldName = FieldNames.get(FieldID);
             final String FieldValue =
-                ToRestore.containsKey(FieldName + ".value") ?
-                    ToRestore.getString(FieldName + ".value")
+                ToRestore.containsKey(Name.Name + ".value") ?
+                    ToRestore.getString(Name.Name + ".value")
                 :
                     "";
-            switch
+            SetField
               (
-                ToRestore.containsKey(FieldName + ".state") ?
-                    FieldState.States.ToState(ToRestore.getInt(FieldName + ".state"))
+                Name,
+                ToRestore.containsKey(Name.Name + ".state") ?
+                    FieldState.States.ToState(ToRestore.getInt(Name.Name + ".state"))
                 :
-                    FieldState.States.STATE_INPUT
-              )
-              {
-            case STATE_INPUT:
-                SetUnknown(FieldID);
-            break;
-            case STATE_VALID:
-                SetValid(FieldID, FieldValue);
-            break;
-            case STATE_ERROR:
-                SetError(FieldID);
-            break;
-              } /*switch*/
+                    FieldState.States.STATE_INPUT,
+                FieldValue
+              );
           } /*for*/
       } /*onRestoreInstanceState*/
 
