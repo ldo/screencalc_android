@@ -556,6 +556,22 @@ public class Rules
                     {
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.WidthMeasure},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[0] / Args[1];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.HeightPixels, FieldName.WidthPixels},
                             /*Calc =*/
                                 new CalcFunction()
