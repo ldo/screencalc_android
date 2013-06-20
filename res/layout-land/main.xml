@@ -55,6 +55,7 @@
         >
             <EditText
                 style="@style/field"
+                android:hint="px"
                 android:id="@+id/height_pixels"
             />
             <Button
@@ -90,6 +91,7 @@
         >
             <EditText
                 style="@style/field"
+                android:hint="px"
                 android:id="@+id/width_pixels"
             />
             <Button
@@ -149,6 +151,7 @@
         >
             <AutoCompleteTextView
                 style="@style/field"
+                android:hint="h:w"
                 android:id="@+id/aspect_ratio"
             />
             <Button
