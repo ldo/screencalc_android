@@ -13,7 +13,7 @@
     <string name="pixel_density">Pixel Dens:</string>
     <string name="aspect_ratio">Aspect:</string>
 
-    <string name="clr">X</string>
+    <string name="clr">←</string>
     <string name="clear_all">Clear All</string>
     <string name="calculate">Calculate</string>
 </resources>
