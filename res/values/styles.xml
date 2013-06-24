@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="field_common" parent="@android:style/TextAppearance.Small">
+    <style name="text_base" parent="@android:style/TextAppearance.Small"/>
+
+    <style name="field_common" parent="text_base">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:singleLine">true</item>
         <item name="android:layout_marginTop">4dp</item>
@@ -14,7 +16,7 @@
         <item name="android:layout_width">80dp</item>
     </style>
 
-    <style name="clr_button" parent="@android:style/TextAppearance.Small">
+    <style name="clr_button" parent="text_base">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginRight">10dp</item>
