@@ -292,6 +292,22 @@ public class Rules
                           ),
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.WidthMeasure},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[1] * Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightPixels},
                             /*Calc =*/
                                 new CalcFunction()
@@ -347,6 +363,22 @@ public class Rules
                                       {
                                         return
                                             Args[1] / AspectDiag(Args[0]);
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.HeightMeasure},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[1] / Args[0];
                                       } /*Calculate*/
                                   } /*CalcFunction*/
                           ),
@@ -456,6 +488,22 @@ public class Rules
                     {
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.WidthPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[1] * Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.HeightMeasure},
                             /*Calc =*/
                                 new CalcFunction()
@@ -482,6 +530,22 @@ public class Rules
                 /*Parse =*/ new ParseInt(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.HeightPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[1] / Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
                         new ParamDef.Entry
                           (
                             /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthMeasure},
