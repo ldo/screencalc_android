@@ -30,6 +30,7 @@ import static nz.gen.geek_central.screencalc.Rules.Units;
 
 public class Main extends android.app.Activity
   {
+    android.text.ClipboardManager Clipboard;
 
     final Rules CurRules = new Rules();
     final int[] UnitsButtons = new int[] {R.id.units_cm, R.id.units_in};
@@ -248,6 +249,74 @@ public class Main extends android.app.Activity
           } /*for*/
       } /*ClearAll*/
 
+    java.util.Map<android.view.MenuItem, Runnable> ContextMenu;
+
+    @Override
+    public void onCreateContextMenu
+      (
+        android.view.ContextMenu TheMenu,
+        View TheView,
+        android.view.ContextMenu.ContextMenuInfo TheMenuInfo
+      )
+      {
+        final EditText TheText = (EditText)TheView;
+        final boolean Writeable = TheView.isFocusable();
+        ContextMenu = new java.util.HashMap<android.view.MenuItem, Runnable>();
+        if (Writeable)
+          {
+            ContextMenu.put
+              (
+                TheMenu.add(R.string.cut),
+                new Runnable()
+                  {
+                    public void run()
+                      {
+                        Clipboard.setText(TheText.getText().toString());
+                        TheText.setText("");
+                      } /*run*/
+                  } /*Runnable*/
+              );
+          } /*if*/
+        ContextMenu.put
+          (
+            TheMenu.add(R.string.copy),
+            new Runnable()
+              {
+                public void run()
+                  {
+                    Clipboard.setText(TheText.getText().toString());
+                  } /*run*/
+              } /*Runnable*/
+          );
+        if (Writeable)
+          {
+            ContextMenu.put
+              (
+                TheMenu.add(R.string.paste),
+                new Runnable()
+                  {
+                    public void run()
+                      {
+                        final CharSequence ToPaste = Clipboard.getText();
+                        if (ToPaste != null)
+                          {
+                            TheText.setText(ToPaste.toString());
+                          }
+                        else
+                          {
+                            android.widget.Toast.makeText
+                              (
+                                /*context =*/ Main.this,
+                                /*text =*/ R.string.no_text_on_clipboard,
+                                /*duration =*/ android.widget.Toast.LENGTH_SHORT
+                              ).show();
+                          } /*if*/
+                      } /*run*/
+                  } /*Runnable*/
+              );
+          } /*if*/
+      } /*onCreateContextMenu*/
+
     @Override
     public void onCreate
       (
@@ -256,6 +325,7 @@ public class Main extends android.app.Activity
       {
         super.onCreate(ToRestore);
         setContentView(R.layout.main);
+        Clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
           {
             final android.content.res.Resources Res = getResources();
             ColorValidValue = Res.getColor(R.color.valid_value);
@@ -278,6 +348,7 @@ public class Main extends android.app.Activity
           }
         for (FieldName Name : FieldName.values())
           {
+            registerForContextMenu(findViewById(FieldDefs.get(Name).FieldID));
             findViewById(FieldDefs.get(Name).ClearButtonID)
                 .setOnClickListener(new FieldClearAction(Name));
           } /*for*/
@@ -428,5 +499,22 @@ public class Main extends android.app.Activity
               );
           } /*for*/
       } /*onRestoreInstanceState*/
+
+    @Override
+    public boolean onContextItemSelected
+      (
+        android.view.MenuItem TheItem
+      )
+      {
+        boolean Handled = false;
+        final Runnable Action = ContextMenu.get(TheItem);
+        if (Action != null)
+          {
+            Action.run();
+            Handled = true;
+          } /*if*/
+        return
+            Handled;
+      } /*onContextItemSelected*/
 
   } /*Main*/;

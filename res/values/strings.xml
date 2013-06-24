@@ -3,6 +3,7 @@
     <string name="app_name">Screencalc</string>
 
     <string name="calc_incomplete">Couldn’t calculate everything, enter some more</string>
+    <string name="no_text_on_clipboard">No text on Clipboard to paste</string>
 
     <string name="cm">cm</string>
     <string name="in">in</string>
@@ -15,4 +16,8 @@
 
     <string name="clear_all">Clear All</string>
     <string name="calculate">Calculate</string>
+
+    <string name="cut">Cut</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
 </resources>
