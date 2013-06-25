@@ -118,7 +118,6 @@ public class NumberUseful
             int Numer = (int)Math.round(Val * Denom);
             for (;;)
               {
-                System.err.printf(String.format("%%.%df => %%d/%%d => %%.%df\n", Places + 1, Places + 1), Val, Numer, Denom, Numer * 1.0 / Denom); /* debug */
                 int BestNumer = Numer;
                 int BestDenom = Denom;
                 int BestGCD = gcd(Numer, Denom);
@@ -158,7 +157,6 @@ public class NumberUseful
                           )
                           {
                             final int ThisGCD = gcd(i, j);
-                            System.err.printf(String.format("%%d/%%d = %%.%df gcd %%d\n", Places + 1), i, j, i * 1.0 / j, ThisGCD); /* debug */
                             if (ThisGCD > BestGCD)
                               {
                                 BestNumer = i;
