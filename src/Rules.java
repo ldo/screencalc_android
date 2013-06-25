@@ -190,6 +190,10 @@ public class Rules
               {
                 final double Numer = Integer.parseInt(s.substring(0, SepPos));
                 final double Denom = Integer.parseInt(s.substring(SepPos + 1, s.length()));
+                if (Denom <= 0.0 || Numer <= 0.0)
+                  {
+                    throw new NumberFormatException("ratio cannot be zero or negative");
+                  } /*if*/
                 Result = Numer / Denom;
               }
             else
