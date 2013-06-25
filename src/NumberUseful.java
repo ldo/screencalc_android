@@ -58,6 +58,10 @@ public class NumberUseful
             int Denom
           )
           {
+            if (Numer <= 0 || Denom <= 0)
+              {
+                throw new IllegalArgumentException("Fraction numerator and denominator must both be positive");
+              } /*if*/
             int GCD = gcd(Numer, Denom);
             this.Numer = Numer / GCD;
             this.Denom = Denom / GCD;
