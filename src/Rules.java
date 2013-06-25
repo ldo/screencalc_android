@@ -664,10 +664,11 @@ public class Rules
         double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : 1.0 / cm_per_in;
         String Suffix = "";
         String Format = "%.2f";
-        switch (ParamDefs.get(Name).Type)
+        final ParamDef.ParamTypes ParamType = ParamDefs.get(Name).Type;
+        switch (ParamType)
           {
         case TYPE_RATIO:
-            Multiplier = 1.0;
+          /* handled specially below */
         break;
         case TYPE_MEASURE:
             Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
@@ -691,7 +692,10 @@ public class Rules
         break;
           } /*switch*/
         return
-            String.format(Format, FieldValue * Multiplier) + Suffix;
+            ParamType == ParamDef.ParamTypes.TYPE_RATIO ?
+                NumberUseful.Fraction.FromReal(FieldValue).toString()
+            :
+                String.format(Format, FieldValue * Multiplier) + Suffix;
       } /*FormatField*/
 
     public static enum ComputeStatus
