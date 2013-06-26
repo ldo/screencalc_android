@@ -116,63 +116,61 @@ public class NumberUseful
                 Math.pow(Multiplier, Math.ceil(Places / Math.log10(Multiplier)))
               );
             int Numer = (int)Math.round(Val * Denom);
-            for (;;)
+            int BestNumer = Numer;
+            int BestDenom = Denom;
+            int BestGCD = gcd(Numer, Denom);
+            final int ILow = Numer - (int)Math.floor((Val * (1 - Tol) * Denom - Numer) * RangeFactor);
+            final int IHigh = Numer + (int)Math.ceil((Val * (1 + Tol) * Denom - Numer) * RangeFactor);
+            boolean IAscending = false;
+            for (int i = Numer;;)
               {
-                int BestNumer = Numer;
-                int BestDenom = Denom;
-                int BestGCD = gcd(Numer, Denom);
-                final int ILow = Numer - (int)Math.floor((Val * (1 - Tol) * Denom - Numer) * RangeFactor);
-                final int IHigh = Numer + (int)Math.ceil((Val * (1 + Tol) * Denom - Numer) * RangeFactor);
-                boolean IAscending = false;
-                for (int i = Numer;;)
-                  {
-                    if (IAscending && i > IHigh)
-                        break;
-                    if (!IAscending && i < ILow)
-                      {
-                        i = Numer;
-                        IAscending = true;
-                      } /*if*/
-                    final int JLow = Numer - (int)Math.floor(Numer / (Val * (1 + Tol)) * RangeFactor);
-                    final int JHigh = Numer + (int)Math.ceil(Numer / (Val * (1 - Tol)) * RangeFactor);
-                    boolean JAscending = false;
-                    for (int j = Denom;;)
-                      {
-                        if (JAscending && j > JHigh)
-                            break;
-                        if (!JAscending && j < JLow)
-                          {
-                            j = Denom;
-                            JAscending = true;
-                          } /*if*/
-                        if
-                          (
-                                i > 0
-                            &&
-                                j > 0
-                            &&
-                                (i != Numer || j != Denom)
-                            &&
-                                Math.abs((i * 1.0 / j - Val) / Val) <= Tol
-                          )
-                          {
-                            final int ThisGCD = gcd(i, j);
-                            if (ThisGCD > BestGCD)
-                              {
-                                BestNumer = i;
-                                BestDenom = j;
-                                BestGCD = ThisGCD;
-                              } /*if*/
-                          } /*if*/
-                        j = JAscending ? j + 1 : j - 1;
-                      } /*for*/
-                    i = IAscending ? i + 1 : i - 1;
-                  } /*for*/
-                if (BestGCD == 1)
+                if (IAscending && i > IHigh)
                     break;
+                if (!IAscending && i < ILow)
+                  {
+                    i = Numer + 1;
+                    IAscending = true;
+                  } /*if*/
+                final int JLow = Numer - (int)Math.floor(Numer / (Val * (1 + Tol)) * RangeFactor);
+                final int JHigh = Numer + (int)Math.ceil(Numer / (Val * (1 - Tol)) * RangeFactor);
+                boolean JAscending = false;
+                for (int j = Denom;;)
+                  {
+                    if (JAscending && j > JHigh)
+                        break;
+                    if (!JAscending && j < JLow)
+                      {
+                        j = Denom + 1;
+                        JAscending = true;
+                      } /*if*/
+                    if
+                      (
+                            i > 0
+                        &&
+                            j > 0
+                        &&
+                            (i != Numer || j != Denom)
+                        &&
+                            Math.abs((i * 1.0 / j - Val) / Val) <= Tol
+                      )
+                      {
+                        final int ThisGCD = gcd(i, j);
+                        if (ThisGCD > BestGCD)
+                          {
+                            BestNumer = i;
+                            BestDenom = j;
+                            BestGCD = ThisGCD;
+                          } /*if*/
+                      } /*if*/
+                    j = JAscending ? j + 1 : j - 1;
+                  } /*for*/
+                i = IAscending ? i + 1 : i - 1;
+              } /*for*/
+            if (BestGCD > 1)
+              {
                 Denom = BestDenom / BestGCD;
                 Numer = BestNumer / BestGCD;
-              } /*for*/
+              } /*if*/
             return
                 new Fraction(Numer, Denom);
           } /*FromReal*/
