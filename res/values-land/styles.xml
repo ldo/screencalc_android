@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="field" parent="field_common">
-        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_width">80dp</item>
     </style>
 </resources>
