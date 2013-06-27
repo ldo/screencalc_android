@@ -152,7 +152,7 @@ public class Main extends android.app.Activity
       (
         FieldName Name,
         FieldState.States NewState,
-        String NewValue /* only for STATE_VALID */
+        String NewValue /* optional */
       )
       {
         final FieldDef TheField = FieldDefs.get(Name);
@@ -161,19 +161,23 @@ public class Main extends android.app.Activity
         switch (NewState)
           {
         case STATE_INPUT:
-            NewValue = "";
-            EditField.setText("");
             FieldColor = ColorUnknownValue;
         break;
         case STATE_VALID:
-            EditField.setText(NewValue);
             FieldColor = ColorValidValue;
         break;
         case STATE_ERROR:
-            NewValue = EditField.getText().toString(); /* keep existing value */
             FieldColor = ColorErrorValue;
         break;
           } /*switch*/
+        if (NewValue != null)
+          {
+            EditField.setText(NewValue);
+          }
+        else
+          {
+            NewValue = EditField.getText().toString(); /* keep existing value */
+          } /*if*/
         EditField.setBackgroundColor(FieldColor);
         EditField.setFocusable(NewState != FieldState.States.STATE_VALID);
         EditField.setFocusableInTouchMode(NewState != FieldState.States.STATE_VALID);
@@ -190,7 +194,7 @@ public class Main extends android.app.Activity
         FieldName Name
       )
       {
-        SetField(Name, FieldState.States.STATE_INPUT, null);
+        SetField(Name, FieldState.States.STATE_INPUT, "");
       } /*SetUnknown*/
 
     private void SetValid
@@ -461,7 +465,12 @@ public class Main extends android.app.Activity
           {
             final FieldState ThisField = FieldStates.get(Name);
             ToSave.putInt(Name.Name + ".state", ThisField.State.Val);
-            ToSave.putString(Name.Name + ".value", ThisField.Value);
+            ToSave.putString
+              (
+                Name.Name + ".value",
+                ((TextView)findViewById(FieldDefs.get(Name).FieldID)).getText().toString()
+                  /* ignore ThisField.Value in case it's out of date */
+              );
           } /*for*/
         super.onSaveInstanceState(ToSave);
       } /*onSaveInstanceState*/
