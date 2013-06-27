@@ -14,6 +14,7 @@ Contents:
     AndroidManifest.xml, build.xml, *.properties -- for driving
         Google's Android build tools (note that you will have to
         provide a couple more of these--see INSTALL for details)
+    art/ -- artwork for icon
     README -- this file
     INSTALL -- build/installation instructions
     COPYING -- licence (GPLv3)
