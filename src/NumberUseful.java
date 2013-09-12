@@ -157,7 +157,7 @@ public class NumberUseful
                           )
                           {
                             final int ThisGCD = gcd(i, j);
-                            if (ThisGCD > BestGCD)
+                            if (j / ThisGCD < BestDenom / BestGCD)
                               {
                                 BestNumer = i;
                                 BestDenom = j;
@@ -168,7 +168,7 @@ public class NumberUseful
                       } /*for*/
                     i = IAscending ? i + 1 : i - 1;
                   } /*for*/
-                if (BestGCD == 1)
+                if (BestDenom / BestGCD >= Denom)
                     break;
                 Denom = BestDenom / BestGCD;
                 Numer = BestNumer / BestGCD;
