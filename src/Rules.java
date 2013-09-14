@@ -126,7 +126,7 @@ public class Rules
 
       } /*ParseDensity*/;
 
-    class ParseMeasure implements Parser
+    class ParseDistance implements Parser
       {
         private class Unit
           {
@@ -174,7 +174,7 @@ public class Rules
                 Double.parseDouble(s) * Multiplier;
           } /*Parse*/
 
-      } /*ParseMeasure*/;
+      } /*ParseDistance*/;
 
     static class ParseRatio implements Parser
       {
@@ -275,7 +275,7 @@ public class Rules
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
+                /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
                         new ParamDef.Entry
@@ -351,7 +351,7 @@ public class Rules
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
+                /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
                         new ParamDef.Entry
@@ -427,7 +427,7 @@ public class Rules
             new ParamDef
               (
                 /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
-                /*Parse =*/ new ParseMeasure(),
+                /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
                         new ParamDef.Entry
