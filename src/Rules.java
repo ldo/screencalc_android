@@ -99,81 +99,147 @@ public class Rules
 
       } /*ParseInt*/;
 
-    class ParseDensity implements Parser
+    static class UnitEntry
       {
+        public final String Name;
+        public final double Multiplier;
+
+        public UnitEntry
+          (
+            String Name,
+            double Multiplier
+          )
+          {
+            this.Name = Name;
+            this.Multiplier = Multiplier;
+          } /*UnitEntry*/
+
+      } /*UnitEntry*/;
+
+    class ParseMeasure implements Parser
+      {
+
+        private final java.util.Map<String, Double> AcceptableUnits;
+        private final String DefaultUnitsSI, DefaultUnitsImp; /* optional */
+
+        public ParseMeasure
+          (
+            UnitEntry[] AcceptableUnits,
+            String DefaultUnitsSI,
+            String DefaultUnitsImp
+          )
+          {
+            this.AcceptableUnits = new java.util.HashMap<String, Double>();
+            boolean ValidDefaultUnitsSI = DefaultUnitsSI == null;
+            boolean ValidDefaultUnitsImp = DefaultUnitsImp == null;
+            if (ValidDefaultUnitsSI != ValidDefaultUnitsImp)
+              {
+                throw new RuntimeException("either specify both or neither DefaultUnits");
+              } /*if*/
+            for (UnitEntry ThisUnit : AcceptableUnits)
+              {
+                if (!ValidDefaultUnitsSI && ThisUnit.Name.equals(DefaultUnitsSI))
+                  {
+                    ValidDefaultUnitsSI = true;
+                  } /*if*/
+                if (!ValidDefaultUnitsImp && ThisUnit.Name.equals(DefaultUnitsImp))
+                  {
+                    ValidDefaultUnitsImp = true;
+                  } /*if*/
+                this.AcceptableUnits.put(ThisUnit.Name, ThisUnit.Multiplier);
+              } /*for*/
+            if (!ValidDefaultUnitsSI || !ValidDefaultUnitsImp)
+              {
+                throw new RuntimeException
+                  (
+                    String.format
+                      (
+                        "invalid DefaultUnits “%s” or “%s”",
+                        DefaultUnitsSI,
+                        DefaultUnitsImp
+                      )
+                  );
+              } /*if*/
+            this.DefaultUnitsSI = DefaultUnitsSI;
+            this.DefaultUnitsImp = DefaultUnitsImp;
+          } /*ParseMeasure*/
 
         public double Parse
           (
             String s
           )
-          /* always returns dots per cm. */
           {
-            boolean IsDPI = CurUnits == Units.UNITS_IN; /* default */
             s = s.toLowerCase();
-            if (s.endsWith("dpcm"))
+            final java.util.regex.Matcher MeasureMatch =
+                java.util.regex.Pattern.compile("^(\\d+(?:\\.\\d*)?|\\.\\d+)", 0).matcher(s);
+            if (!MeasureMatch.find())
               {
-                IsDPI = false;
-                s = s.substring(0, s.length() - 4);
+                throw new NumberFormatException("invalid measure");
+              } /*if*/
+            final String Units = s.substring(MeasureMatch.end(1));
+            final String DefaultUnits =
+                Rules.this.CurUnits == Rules.Units.UNITS_CM ? DefaultUnitsSI : DefaultUnitsImp;
+            final Double Multiplier;
+            if (Units.length() != 0)
+              {
+                Multiplier = AcceptableUnits.get(Units);
+                if (Multiplier == null)
+                  {
+                    throw new NumberFormatException
+                      (
+                        String.format("unrecognized units “%s”", Units)
+                      );
+                  } /*if*/
               }
-            else if (s.endsWith("dpi"))
+            else if (DefaultUnits != null)
               {
-                IsDPI = true;
-                s = s.substring(0, s.length() - 3);
+                Multiplier = AcceptableUnits.get(DefaultUnits);
+              }
+            else
+              {
+                throw new NumberFormatException("missing units and no default");
               } /*if*/
             return
-                Double.parseDouble(s) / (IsDPI ? cm_per_in : 1.0);
+                Double.parseDouble(MeasureMatch.group(1)) * Multiplier;
           } /*Parse*/
 
+      } /*ParseMeasure*/;
+
+    class ParseDensity extends ParseMeasure
+      {
+        public ParseDensity()
+          {
+            super
+              (
+                /*Units =*/
+                    new UnitEntry[]
+                      {
+                        new UnitEntry("dpi", 1.0 / cm_per_in),
+                        new UnitEntry("dpcm", 1.0),
+                      },
+                /*DefaultUnitsSI =*/ "dpcm",
+                /*DefaultUnitsImp =*/ "dpi"
+              );
+          } /*ParseDensity*/
       } /*ParseDensity*/;
 
-    class ParseDistance implements Parser
+    class ParseDistance extends ParseMeasure
       {
-        private class Unit
+        public ParseDistance()
           {
-            public final String Name;
-            public final double Multiplier;
-
-            public Unit
+            super
               (
-                String Name,
-                double Multiplier
-              )
-              {
-                this.Name = Name;
-                this.Multiplier = Multiplier;
-              } /*Unit*/
-
-          } /*Unit*/;
-
-        public double Parse
-          (
-            String s
-          )
-          {
-            double Multiplier = CurUnits == Units.UNITS_CM ? 1.0 : cm_per_in;
-            s = s.toLowerCase();
-            for
-              (
-                Unit This :
-                    new Unit[]
+                /*Units =*/
+                    new UnitEntry[]
                         {
-                            new Unit("cm", 1.0),
-                            new Unit("mm", 0.1),
-                            new Unit("in", cm_per_in),
-                        }
-              )
-              {
-                if (s.endsWith(This.Name))
-                  {
-                    s = s.substring(0, s.length() - This.Name.length());
-                    Multiplier = This.Multiplier;
-                    break;
-                  } /*if*/
-              } /*for*/
-            return
-                Double.parseDouble(s) * Multiplier;
-          } /*Parse*/
-
+                            new UnitEntry("cm", 1.0),
+                            new UnitEntry("mm", 0.1),
+                            new UnitEntry("in", cm_per_in),
+                        },
+                /*DefaultUnitsSI =*/ "cm",
+                /*DefaultUnitsImp =*/ "in"
+              );
+          } /*ParseDistance*/
       } /*ParseDistance*/;
 
     static class ParseRatio implements Parser

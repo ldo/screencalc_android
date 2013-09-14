@@ -417,6 +417,7 @@ public class Main extends android.app.Activity
                               }
                             catch (NumberFormatException Bad)
                               {
+                                System.err.printf("Screencalc parse error for field “%s”: %s\n", Name, Bad.toString()); /* debug */
                                 SetError(Name);
                               } /*try*/
                           }
