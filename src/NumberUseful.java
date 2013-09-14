@@ -116,11 +116,15 @@ public class NumberUseful
                 Math.pow(Multiplier, Math.ceil(Places / Math.log10(Multiplier)))
               );
             int Numer = (int)Math.round(Val * Denom);
+              {
+                final int GCD = gcd(Numer, Denom);
+                Numer /= GCD;
+                Denom /= GCD;
+              }
             for (;;)
               {
                 int BestNumer = Numer;
                 int BestDenom = Denom;
-                int BestGCD = gcd(Numer, Denom);
                 final int ILow = Numer - (int)Math.floor((Val * (1 - Tol) * Denom - Numer) * RangeFactor);
                 final int IHigh = Numer + (int)Math.ceil((Val * (1 + Tol) * Denom - Numer) * RangeFactor);
                 boolean IAscending = false;
@@ -157,21 +161,20 @@ public class NumberUseful
                           )
                           {
                             final int ThisGCD = gcd(i, j);
-                            if (j / ThisGCD < BestDenom / BestGCD)
+                            if (j / ThisGCD < BestDenom)
                               {
-                                BestNumer = i;
-                                BestDenom = j;
-                                BestGCD = ThisGCD;
+                                BestNumer = i / ThisGCD;
+                                BestDenom = j / ThisGCD;
                               } /*if*/
                           } /*if*/
                         j = JAscending ? j + 1 : j - 1;
                       } /*for*/
                     i = IAscending ? i + 1 : i - 1;
                   } /*for*/
-                if (BestDenom / BestGCD >= Denom)
+                if (BestDenom >= Denom)
                     break;
-                Denom = BestDenom / BestGCD;
-                Numer = BestNumer / BestGCD;
+                Denom = BestDenom;
+                Numer = BestNumer;
               } /*for*/
             return
                 new Fraction(Numer, Denom);
