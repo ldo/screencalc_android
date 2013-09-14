@@ -104,21 +104,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/diagonal"
-        android:layout_toRightOf="@id/clear_width_pixels"
-        android:layout_alignBaseline="@id/clear_width_pixels"
+        android:layout_toRightOf="@id/clear_height_pixels"
+        android:layout_alignBaseline="@id/clear_height_pixels"
         android:id="@+id/_diagonal_caption"
     />
     <EditText
         style="@style/field"
         android:id="@+id/diag_measure"
         android:layout_toRightOf="@id/_diagonal_caption"
-        android:layout_below="@id/height_measure"
+        android:layout_below="@id/_units_selector"
     />
     <Button
         style="@style/clr_button"
         android:id="@+id/clear_diag_measure"
         android:layout_toRightOf="@id/diag_measure"
-        android:layout_below="@id/height_measure"
+        android:layout_below="@id/_units_selector"
     />
 
     <EditText
@@ -161,6 +161,26 @@
         android:layout_alignLeft="@id/clear_diag_measure"
     />
 
+    <EditText
+        style="@style/field"
+        android:id="@+id/viewing_distance"
+        android:layout_alignLeft="@id/aspect_ratio"
+        android:layout_below="@id/aspect_ratio"
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/viewing_distance"
+        android:layout_toLeftOf="@id/viewing_distance"
+        android:layout_alignBaseline="@id/viewing_distance"
+    />
+    <Button
+        style="@style/clr_button"
+        android:id="@+id/clear_viewing_distance"
+        android:layout_below="@id/aspect_ratio"
+        android:layout_alignLeft="@id/clear_aspect_ratio"
+    />
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -175,7 +195,7 @@
             android:id="@+id/calculate"
             android:text="@string/calculate"
             android:layout_toRightOf="@id/clear_all"
-            android:layout_below="@id/aspect_ratio"
+            android:layout_below="@id/viewing_distance"
     />
 
 </RelativeLayout>

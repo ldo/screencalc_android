@@ -157,13 +157,32 @@
         android:layout_below="@id/pixel_density"
     />
 
+    <EditText
+        style="@style/field"
+        android:id="@+id/viewing_distance"
+        android:layout_alignLeft="@id/aspect_ratio"
+        android:layout_below="@id/aspect_ratio"
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/viewing_distance"
+        android:layout_alignBaseline="@id/viewing_distance"
+    />
+    <Button
+        style="@style/clr_button"
+        android:id="@+id/clear_viewing_distance"
+        android:layout_alignLeft="@id/clear_aspect_ratio"
+        android:layout_below="@id/aspect_ratio"
+    />
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/clear_all"
             android:text="@string/clear_all"
-            android:layout_alignLeft="@id/aspect_ratio"
-            android:layout_below="@id/aspect_ratio"
+            android:layout_alignLeft="@id/viewing_distance"
+            android:layout_below="@id/viewing_distance"
     />
     <Button
             android:layout_width="wrap_content"
@@ -171,7 +190,7 @@
             android:id="@+id/calculate"
             android:text="@string/calculate"
             android:layout_toRightOf="@id/clear_all"
-            android:layout_below="@id/aspect_ratio"
+            android:layout_below="@id/viewing_distance"
     />
 
 </RelativeLayout>

@@ -80,6 +80,11 @@ public class Main extends android.app.Activity
           );
         FieldDefs.put
           (
+            FieldName.ViewingDistance,
+            new FieldDef(R.id.viewing_distance, R.id.clear_viewing_distance)
+          );
+        FieldDefs.put
+          (
             FieldName.HeightPixels,
             new FieldDef(R.id.height_pixels, R.id.clear_height_pixels)
           );

@@ -13,6 +13,7 @@
     <string name="diagonal">Diag:</string>
     <string name="pixel_density">Pixel Density:</string>
     <string name="aspect_ratio">Aspect:</string>
+    <string name="viewing_distance">View Dist:</string>
 
     <string name="clear_all">Clear All</string>
     <string name="calculate">Calculate</string>

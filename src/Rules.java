@@ -42,6 +42,7 @@ public class Rules
         DiagMeasure("diagonal"),
         PixelDensity("density"),
         AspectRatio("aspect"),
+        ViewingDistance("viewdist"),
         HeightPixels("heightpx"),
         WidthPixels("widthpx");
 
@@ -58,6 +59,13 @@ public class Rules
       } /*FieldName*/;
 
     public static final double cm_per_in = 2.54;
+
+    public static final double pixel_angle = Math.PI / 180 / 60;
+      /* one arc-minute in radians, minimum angle between pixels
+        distinguishable to typical human eye */
+
+    public static final double acuity_factor = Math.sqrt(2) / Math.tan(pixel_angle);
+      /* sqrt(2) comes in to account for greater pixel spacing diagonally */
 
     public static enum Units
       {
@@ -289,7 +297,7 @@ public class Rules
         public static enum ParamTypes
           {
             TYPE_RATIO,
-            TYPE_MEASURE,
+            TYPE_DISTANCE,
             TYPE_PIXELS,
             TYPE_DENSITY,
           };
@@ -340,7 +348,7 @@ public class Rules
             FieldName.HeightMeasure,
             new ParamDef
               (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
+                /*Type =*/ ParamDef.ParamTypes.TYPE_DISTANCE,
                 /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
@@ -416,7 +424,7 @@ public class Rules
             FieldName.WidthMeasure,
             new ParamDef
               (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
+                /*Type =*/ ParamDef.ParamTypes.TYPE_DISTANCE,
                 /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
@@ -492,7 +500,7 @@ public class Rules
             FieldName.DiagMeasure,
             new ParamDef
               (
-                /*Type =*/ ParamDef.ParamTypes.TYPE_MEASURE,
+                /*Type =*/ ParamDef.ParamTypes.TYPE_DISTANCE,
                 /*Parse =*/ new ParseDistance(),
                 /*Calculate =*/ new ParamDef.Entry[]
                     {
@@ -646,6 +654,22 @@ public class Rules
                     {
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.ViewingDistance},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            acuity_factor / Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.HeightMeasure, FieldName.HeightPixels},
                             /*Calc =*/
                                 new CalcFunction()
@@ -723,6 +747,34 @@ public class Rules
                     }
               )
           );
+        ParamDefs.put
+          (
+            FieldName.ViewingDistance,
+            new ParamDef
+              (
+                /*Type =*/ ParamDef.ParamTypes.TYPE_DISTANCE,
+                /*Parse =*/ new ParseDistance(),
+                /*Calculate =*/ new ParamDef.Entry[]
+                    {
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            acuity_factor / Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                    }
+              )
+          );
       }
 
     public String FormatField
@@ -740,7 +792,7 @@ public class Rules
         case TYPE_RATIO:
           /* handled specially below */
         break;
-        case TYPE_MEASURE:
+        case TYPE_DISTANCE:
             Suffix = CurUnits == Units.UNITS_CM ? "cm" : "in";
         break;
         case TYPE_PIXELS:
