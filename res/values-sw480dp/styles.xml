@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="text_base" parent="@android:style/TextAppearance.Medium"/>
+
+    <!-- "field" style is identical to definition in res/values-large/styles.xml,
+        but needs to be repeated here because systems that recognize -swnnndp and
+        -wnnndp resource qualifiers give them precedence over -large. -->
+    <style name="field" parent="field_common">
+        <item name="android:layout_width">120dp</item>
+    </style>
+</resources>
