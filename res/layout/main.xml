@@ -4,12 +4,20 @@
     android:layout_height="fill_parent"
 >
 
+    <RadioButton
+        android:id="@+id/_anchor"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+    />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/default_units"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignBaseline="@id/_anchor"
         android:id="@+id/_default_units_caption"
     />
     <RadioGroup
