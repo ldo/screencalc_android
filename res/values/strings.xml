@@ -10,7 +10,9 @@
     <string name="default_units">Default Units:</string>
     <string name="height">Height:</string>
     <string name="width">Width:</string>
-    <string name="diagonal">Diag:</string>
+    <string name="diagonal">Diagonal:</string>
+      <!-- make this text longer than “Aspect:” to avoid latter running into
+        clear button on left in landscape layout -->
     <string name="pixel_density">Pixel Density:</string>
     <string name="aspect_ratio">Aspect:</string>
     <string name="viewing_distance">View Dist:</string>
