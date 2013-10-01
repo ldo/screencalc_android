@@ -125,8 +125,10 @@ public class NumberUseful
               {
                 int BestNumer = Numer;
                 int BestDenom = Denom;
-                final int ILow = Numer - (int)Math.floor((Val * (1 - Tol) * Denom - Numer) * RangeFactor);
-                final int IHigh = Numer + (int)Math.ceil((Val * (1 + Tol) * Denom - Numer) * RangeFactor);
+                final double DeltaILow = Val * (1 - Tol) * Denom - Numer;
+                final double DeltaIHigh = Val * (1 + Tol) * Denom - Numer;
+                final int ILow = Math.max(Numer + (int)Math.floor(DeltaILow * RangeFactor), 1);
+                final int IHigh = Numer + (int)Math.ceil(DeltaIHigh * RangeFactor);
                 boolean IAscending = false;
                 for (int i = Numer;;)
                   {
@@ -137,8 +139,10 @@ public class NumberUseful
                         i = Numer + 1;
                         IAscending = true;
                       } /*if*/
-                    final int JLow = Numer - (int)Math.floor(Numer / (Val * (1 + Tol)) * RangeFactor);
-                    final int JHigh = Numer + (int)Math.ceil(Numer / (Val * (1 - Tol)) * RangeFactor);
+                    final double DeltaJLow = Numer / (Val * (1 + Tol)) - Denom;
+                    final double DeltaJHigh = Numer / (Val * (1 - Tol)) - Denom;
+                    final int JLow = Math.max((int)Math.floor(Denom + DeltaJLow * RangeFactor), 1);
+                    final int JHigh = (int)Math.ceil(Denom + DeltaJHigh);
                     boolean JAscending = false;
                     for (int j = Denom;;)
                       {
