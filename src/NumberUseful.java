@@ -107,7 +107,7 @@ public class NumberUseful
           )
           {
             final int Multiplier = 360; /* something with lots of factors */
-            final int Places = 2; /* decimal places of precision needed */
+            final int Places = 3; /* decimal places of precision needed */
             final double RangeFactor = 1.0; /* how far to look */
             final double Tol = Math.pow(10, - Places);
 
