@@ -106,7 +106,7 @@ public class NumberUseful
             double Val
           )
           {
-            final int Multiplier = 360; /* something with lots of factors */
+            final int Multiplier = 3240; /* something with lots of factors */
             final int Places = 2; /* decimal places of precision needed */
             final double RangeFactor = 1.0; /* how far to look */
             final double Tol = Math.pow(10, - Places);
