@@ -1,3 +1,7 @@
+16133.0, 2014 March 4:
+    make better use of larger screens; tweak fraction-reduction
+    algorithm a bit
+
 15962.4, 2013 September 14:
     add viewing distance field
 
