@@ -2,7 +2,7 @@ package nz.gen.geek_central.screencalc;
 /*
     Useful numeric routines for Screencalc.
 
-    Copyright 2013 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
+    Copyright 2013, 2014 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -83,9 +83,21 @@ public class NumberUseful
             final Fraction Result;
             if (SepPos >= 0)
               {
-                final int Numer = Integer.parseInt(s.substring(0, SepPos));
-                final int Denom = Integer.parseInt(s.substring(SepPos + 1, s.length()));
-                Result = new Fraction(Numer, Denom);
+                final String NumerStr = s.substring(0, SepPos);
+                final String DenomStr = s.substring(SepPos + 1, s.length());
+                if (NumerStr.indexOf(".") >= 0 || DenomStr.indexOf(".") >= 0)
+                  {
+                    Result = FromReal
+                      (
+                        Double.parseDouble(NumerStr) / Double.parseDouble(DenomStr)
+                      );
+                  }
+                else
+                  {
+                    final int Numer = Integer.parseInt(NumerStr);
+                    final int Denom = Integer.parseInt(DenomStr);
+                    Result = new Fraction(Numer, Denom);
+                  } /*if*/
               }
             else
               {
