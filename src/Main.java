@@ -22,6 +22,7 @@ package nz.gen.geek_central.screencalc;
 */
 
 import java.util.HashMap;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
@@ -30,6 +31,29 @@ import static nz.gen.geek_central.screencalc.Rules.Units;
 
 public class Main extends android.app.Activity
   {
+    public static final java.util.Locale StdLocale = java.util.Locale.US;
+      /* for all those places I don't want formatting to be locale-specific */
+
+    public static byte[] ReadAll
+      (
+        java.io.InputStream From
+      )
+      /* reads all available data from From. */
+    throws java.io.IOException
+      {
+        java.io.ByteArrayOutputStream Result = new java.io.ByteArrayOutputStream();
+        final byte[] Buf = new byte[256]; /* just to reduce number of I/O operations */
+        for (;;)
+          {
+            final int BytesRead = From.read(Buf);
+            if (BytesRead < 0)
+                break;
+            Result.write(Buf, 0, BytesRead);
+          } /*for*/
+        return
+            Result.toByteArray();
+      } /*ReadAll*/
+
     android.text.ClipboardManager Clipboard;
 
     final Rules CurRules = new Rules();
@@ -333,6 +357,7 @@ public class Main extends android.app.Activity
       )
       {
         super.onCreate(ToRestore);
+        getWindow().requestFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.main);
         Clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
           {
@@ -461,6 +486,43 @@ public class Main extends android.app.Activity
       } /*onCreate*/
 
     @Override
+    public void onPostCreate
+      (
+        android.os.Bundle SavedInstanceState
+      )
+      {
+        super.onPostCreate(SavedInstanceState);
+        getWindow().setFeatureInt
+          (
+            android.view.Window.FEATURE_CUSTOM_TITLE,
+            R.layout.title_bar
+          );
+        ((android.widget.Button)findViewById(R.id.action_help)).setOnClickListener
+          (
+            new View.OnClickListener()
+              {
+                public void onClick
+                  (
+                    View ButtonView
+                  )
+                  {
+                    String VersionName;
+                    try
+                      {
+                        VersionName =
+                            getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+                      }
+                    catch (android.content.pm.PackageManager.NameNotFoundException CantFindMe)
+                      {
+                        VersionName = "CANTFINDME"; /*!*/
+                      } /*catch*/
+                    ShowHelp("help/index.html", new String[] {VersionName});
+                  } /*onClick*/
+              } /*OnClickListener*/
+          );
+      } /*onPostCreate*/
+
+    @Override
     public void onSaveInstanceState
       (
         android.os.Bundle ToSave
@@ -531,5 +593,51 @@ public class Main extends android.app.Activity
         return
             Handled;
       } /*onContextItemSelected*/
+
+    public void ShowHelp
+      (
+        String Path,
+        String[] FormatArgs
+      )
+      /* launches the Help activity, displaying the page in my resources with
+        the specified Path. */
+      {
+        final Intent LaunchHelp = new Intent(Intent.ACTION_VIEW)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+      /* must always load the page contents, can no longer pass a file:///android_asset/
+        URL with Android 4.0. */
+        byte[] HelpRaw;
+          {
+            java.io.InputStream ReadHelp;
+            try
+              {
+                ReadHelp = getAssets().open(Path);
+                HelpRaw = ReadAll(ReadHelp);
+              }
+            catch (java.io.IOException Failed)
+              {
+                throw new RuntimeException("can't read help page: " + Failed);
+              } /*try*/
+            try
+              {
+                ReadHelp.close();
+              }
+            catch (java.io.IOException WhoCares)
+              {
+              /* I mean, really? */
+              } /*try*/
+          }
+        LaunchHelp.putExtra
+          (
+            Help.ContentID,
+            FormatArgs != null ?
+                String.format(StdLocale, new String(HelpRaw), (Object[])FormatArgs)
+                    .getBytes()
+            :
+                HelpRaw
+          );
+        LaunchHelp.setClass(this, Help.class);
+        startActivity(LaunchHelp);
+      } /*ShowHelp*/
 
   } /*Main*/;

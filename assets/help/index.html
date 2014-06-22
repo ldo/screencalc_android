@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=utf-8">
+<TITLE>Screencalc Help</TITLE>
+<STYLE TYPE="text/css">
+.entry_field
+  {
+    background : #fffcc9;
+    padding : 1pt;
+    border : 1pt solid black;
+  } /*entry_field*/
+.valid_field
+  {
+    background : #7ac074;
+    padding : 1pt;
+    border : 1pt solid black;
+  } /*valid_field*/
+.error_field
+  {
+    background : #ff817f;
+    padding : 1pt;
+    border : 1pt solid black;
+  } /*error_field*/
+</STYLE>
+</HEAD>
+<BODY>
+<H1>Help Page for the Screencalc App</H1>
+<P>Screencalc lets you calculate various parameters of a display screen, namely its
+dimensions in distance units, dimensions in pixels, pixel density and optimal viewing
+distance. Given a suitable subset of these parameters, it is able to work out all the others.
+<P>For example, given the diagonal measurement and the aspect ratio, it is able
+to work out the width and height. Given the number of pixels along one dimension
+as well, it can tell you the number of pixels along the other dimension, together
+with the pixel density (number of pixels per unit distance) and viewing distance.
+<P>To use Screencalc, fill in whatever information you know, and tap the “Calculate”
+button. Fields that it can determine, and ones that were validly entered, will be displayed
+in <SPAN CLASS="valid_field">green</SPAN>; if any field that was left empty cannot be
+worked out from the ones that were entered, it will remain with its
+<SPAN CLASS="entry_field">yellow</SPAN> background, and a brief message will appear.
+If any input was invalid (e.g. not a valid number or not using recognized units), it
+will be displayed with a <SPAN CLASS="error_field">red</SPAN> background.
+<P>To start afresh, use the “Clear All” button to clear all the fields. Alternatively,
+you can tap the 
+<IMG SRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAPCAYAAAD+pA/bAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3gYWATMPe8Q4igAAAaZJREFUOMu1U7uqwkAUnE22sFC0
+83O0jBEskiJJIX6FzYoGC8kHiCJpTSEIFqIf4F8o2ooRwSYaUGP2FqL3SnyAXAe22uHMmXPOEAAc
+X4SAL4M++9A0DalU6uPCvu/DcRyQRyNijEHXdZxOp1+rwsVsGIb3HVKKIAgiApvNBpIkRUdUrVah
+aRqOxyM45+CcgxACx3EwHA4hiiI4v/Q0n89hmiYIITfu3xfZQb1eh6qqd51fkUwmYZomxuMxKKVY
+LBYolUqIxWIghLzfQaPRQD6ff2g3DEMUCgVQSsEYg+u6sG0biqKAMYbD4fBaoFwuQ5blh8WvCIIA
+sixjtVqh2Wwik8mgVqthv9+/P9NOp4PlcvmSSAjBdDqFbdvIZrOYTCYYDAaglL4X8DwPuq7Ddd2n
+xNlshmKxCEVR0G63YVkWKpUKRqPR7cJeBm2328EwDKzX6+gcKUW/34eqqmCMwfd9SJIEy7LQ7XZf
+LjmSg0QigV6vh3Q6fUcURREAcD6f77IhCMLTHORyuWiSPc+DYRhotVqIx+MfJ3m73T528J8ghHxX
+AAB+AKH2uqahERVkAAAAAElFTkSuQmCC" ALT="delete icon"> button that appears next to
+each calculated field to clear just that field.
+<P><B>Uniform Pixel Densities Only:</B> Screencalc assumes that the vertical
+and horizontal pixel densities are always the same. This is true of all current
+computer/smartphone/tablet displays and digital television sets.
+
+<H2>Distance Units</H2>
+<P>Screencalc can perform its calculations in either centimetres or inches, as
+specified by the Default Units radio buttons at the top of the display.
+Input numbers are interpreted in the current default units if none are specified;
+alternatively, you can append the appropriate units suffix (“cm” or “in” for
+distances, “dpcm” or “dpi” for pixel density) to a number to override the current
+default units. Calculated fields will always be explicitly shown with the
+applicable units, except for the height and width in pixels, which are always
+in pixels regardless.
+<H3>Converting Units</H3>
+<P>To convert measures from one unit to the other, simply change the default
+units, then, <I>without reentering any data</I>, tap the “Calculate” button.
+All measures already input or calculated will be recalculated in the new units.
+
+<H2>Aspect Ratios</H2>
+<P>The <I>aspect ratio</I> is the ratio of the height of the screen to its width.
+This is usually expressed as the ratio of two integers separated by a colon,
+<I>h</I>:<I>w</I>. The autocomplete for this field includes various common
+aspect ratios, such as 9:16, 3:4 etc. Alternatively, you can enter a real
+number (like “0.75”) or even a ratio of reals (like “1:2.35”) and it will
+work out a suitable approximate integer ratio representation.
+<P>Note that the height comes first in the ratio, not the width.
+
+<H2>View Distance</H2>
+<P>The “View Dist” field shows the estimated optimal viewing distance for
+the display, based on the ability of the typical human eye to resolve individual
+pixels. The usual basis for calculating this figure is to assume that the
+eye can just resolve one pixel per arc-minute, or alternatively 60 pixels per
+degree of angle. However, Screencalc measures the angular distance between
+pixels diagonally, rather than vertically or horizontally as other programs might
+do. Thus, you will see a factor of &#x221a;2 &#x2245; 1.4 discrepancy between
+the numbers reported by Screencalc versus other programs: basically, Screencalc reports
+about a 40%% greater viewing distance for the same pixel density, or conversely,
+about a 40%% greater pixel density for the same viewing distance.
+
+<H2>More Complex Example: Equivalent Diagonals</H2>
+<P>Screencalc can help with more complex calculations.
+For example, given parameters for a screen with one aspect ratio, what are the parameters
+for a screen with another aspect ratio but the same height and pixel density?
+<P>To be more specific, say you have a widescreen (9:16 aspect) monitor with 1080×1920
+pixels and a 24-inch (61-cm) diagonal. What would be the diagonal for an extra-wide
+9:21 aspect monitor with the same height?
+<P>First, enter the parameters for the 9:16 monitor and tap “Calculate”. All the fields
+should now be filled in. Next, clear just the width distance,
+width in pixels, diagonal distance, and aspect ratio fields. Enter the new aspect
+ratio of 9:21. Then press “Calculate”, and you will see the fields you cleared get
+recalculated for the new monitor. It should show a diagonal of almost exactly 76cm, or 30in,
+and a width of 2520 pixels. It will also reduce the 9:21 ratio to its lowest terms, 3:7.
+
+<H2>Software Licence</H2>
+<P>Screencalc version %s is copyright &copy; 2011-2014
+<A HREF="mailto:about_screencalc@geek-central.gen.nz">Lawrence D’Oliveiro</A>.
+
+<P>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.</P>
+
+<P>This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the <A HREF="http://www.gnu.org/licenses/gpl.html">GNU General
+Public License</A> for more details.</P>
+
+<P>Source code is available at <TT><A HREF="https://github.com/ldo/screencalc_android">https://github.com/ldo/screencalc_android</A></TT>.
+
+</BODY>
+</HTML>
