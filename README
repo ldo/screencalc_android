@@ -11,6 +11,7 @@ Discrepancies are not checked if you overspecify.
 Contents:
     src/ -- Java sources for the Android app
     res/ -- resources for the Android app
+    assets/ -- additional data (help file) for the Android app
     AndroidManifest.xml, build.xml, *.properties -- for driving
         Google's Android build tools (note that you will have to
         provide a couple more of these--see INSTALL for details)
