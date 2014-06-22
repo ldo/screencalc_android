@@ -23,4 +23,6 @@
     <string name="cut">Cut</string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>
+
+    <string name="show_help">Help</string>
 </resources>

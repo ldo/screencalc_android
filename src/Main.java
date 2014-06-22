@@ -29,7 +29,7 @@ import android.widget.EditText;
 import static nz.gen.geek_central.screencalc.Rules.FieldName;
 import static nz.gen.geek_central.screencalc.Rules.Units;
 
-public class Main extends android.app.Activity
+public class Main extends ActionActivity
   {
     public static final java.util.Locale StdLocale = java.util.Locale.US;
       /* for all those places I don't want formatting to be locale-specific */
@@ -282,8 +282,6 @@ public class Main extends android.app.Activity
           } /*for*/
       } /*ClearAll*/
 
-    java.util.Map<android.view.MenuItem, Runnable> ContextMenu;
-
     @Override
     public void onCreateContextMenu
       (
@@ -292,14 +290,14 @@ public class Main extends android.app.Activity
         android.view.ContextMenu.ContextMenuInfo TheMenuInfo
       )
       {
+        InitContextMenu(TheMenu);
         final EditText TheText = (EditText)TheView;
         final boolean Writeable = TheView.isFocusable();
-        ContextMenu = new java.util.HashMap<android.view.MenuItem, Runnable>();
         if (Writeable)
           {
-            ContextMenu.put
+            AddContextMenuItem
               (
-                TheMenu.add(R.string.cut),
+                R.string.cut,
                 new Runnable()
                   {
                     public void run()
@@ -310,9 +308,9 @@ public class Main extends android.app.Activity
                   } /*Runnable*/
               );
           } /*if*/
-        ContextMenu.put
+        AddContextMenuItem
           (
-            TheMenu.add(R.string.copy),
+            R.string.copy,
             new Runnable()
               {
                 public void run()
@@ -323,9 +321,9 @@ public class Main extends android.app.Activity
           );
         if (Writeable)
           {
-            ContextMenu.put
+            AddContextMenuItem
               (
-                TheMenu.add(R.string.paste),
+                R.string.paste,
                 new Runnable()
                   {
                     public void run()
@@ -357,7 +355,10 @@ public class Main extends android.app.Activity
       )
       {
         super.onCreate(ToRestore);
-        getWindow().requestFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
+        if (!HasActionBar)
+          {
+            getWindow().requestFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
+          } /*if*/
         setContentView(R.layout.main);
         Clipboard = (android.text.ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
           {
@@ -488,39 +489,51 @@ public class Main extends android.app.Activity
     @Override
     public void onPostCreate
       (
-        android.os.Bundle SavedInstanceState
+        android.os.Bundle ToRestore
       )
       {
-        super.onPostCreate(SavedInstanceState);
-        getWindow().setFeatureInt
-          (
-            android.view.Window.FEATURE_CUSTOM_TITLE,
-            R.layout.title_bar
-          );
-        ((android.widget.Button)findViewById(R.id.action_help)).setOnClickListener
-          (
-            new View.OnClickListener()
-              {
-                public void onClick
-                  (
-                    View ButtonView
-                  )
+        super.onPostCreate(ToRestore);
+        if (!HasActionBar)
+          {
+            getWindow().setFeatureInt
+              (
+                android.view.Window.FEATURE_CUSTOM_TITLE,
+                R.layout.title_bar
+              );
+            ((android.widget.Button)findViewById(R.id.action_help)).setOnClickListener
+              (
+                new View.OnClickListener()
                   {
-                    String VersionName;
-                    try
+                    public void onClick
+                      (
+                        View ButtonView
+                      )
                       {
-                        VersionName =
-                            getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-                      }
-                    catch (android.content.pm.PackageManager.NameNotFoundException CantFindMe)
-                      {
-                        VersionName = "CANTFINDME"; /*!*/
-                      } /*catch*/
-                    ShowHelp("help/index.html", new String[] {VersionName});
-                  } /*onClick*/
-              } /*OnClickListener*/
-          );
+                        ShowHelpWithVersion();
+                      } /*onClick*/
+                  } /*OnClickListener*/
+              );
+          } /*if*/
       } /*onPostCreate*/
+
+    @Override
+    protected void OnCreateOptionsMenu()
+      {
+        AddOptionsMenuItem
+          (
+            /*StringID =*/ R.string.show_help,
+            /*IconID =*/ android.R.drawable.ic_menu_help,
+            /*ActionBarUsage =*/ android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM,
+            /*Action =*/
+                new Runnable()
+                  {
+                    public void run()
+                      {
+                        ShowHelpWithVersion();
+                      } /*run*/
+                  } /*Runnable*/
+          );
+      } /*OnCreateOptionsMenu*/
 
     @Override
     public void onSaveInstanceState
@@ -577,23 +590,6 @@ public class Main extends android.app.Activity
           } /*for*/
       } /*onRestoreInstanceState*/
 
-    @Override
-    public boolean onContextItemSelected
-      (
-        android.view.MenuItem TheItem
-      )
-      {
-        boolean Handled = false;
-        final Runnable Action = ContextMenu.get(TheItem);
-        if (Action != null)
-          {
-            Action.run();
-            Handled = true;
-          } /*if*/
-        return
-            Handled;
-      } /*onContextItemSelected*/
-
     public void ShowHelp
       (
         String Path,
@@ -639,5 +635,20 @@ public class Main extends android.app.Activity
         LaunchHelp.setClass(this, Help.class);
         startActivity(LaunchHelp);
       } /*ShowHelp*/
+
+    public void ShowHelpWithVersion()
+      {
+        String VersionName;
+        try
+          {
+            VersionName =
+                getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+          }
+        catch (android.content.pm.PackageManager.NameNotFoundException CantFindMe)
+          {
+            VersionName = "CANTFINDME"; /*!*/
+          } /*catch*/
+        ShowHelp("help/index.html", new String[] {VersionName});
+      } /*ShowHelpWithVersion*/
 
   } /*Main*/;
