@@ -7,6 +7,7 @@
 
     <string name="cm">cm</string>
     <string name="in">in</string>
+    <string name="px">px</string>
     <string name="default_units">Default Units:</string>
     <string name="height">Height:</string>
     <string name="width">Width:</string>
