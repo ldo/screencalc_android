@@ -32,7 +32,7 @@ distance. Given a suitable subset of these parameters, it is able to work out al
 <P>For example, given the diagonal measurement and the aspect ratio, it is able
 to work out the width and height. Given the number of pixels along one dimension
 as well, it can tell you the number of pixels along the other dimension, together
-with the pixel density (number of pixels per unit distance) and viewing distance.
+with the total number of pixels, pixel density (number of pixels per unit distance) and viewing distance.
 <P>To use Screencalc, fill in whatever information you know, and tap the “Calculate”
 button. Fields that it can determine, and ones that were validly entered, will be displayed
 in <SPAN CLASS="valid_field">green</SPAN>; if any field that was left empty cannot be
@@ -69,8 +69,8 @@ Input numbers are interpreted in the current default units if none are specified
 alternatively, you can append the appropriate units suffix (“cm” or “in” for
 distances, “dpcm” or “dpi” for pixel density) to a number to override the current
 default units. Calculated fields will always be explicitly shown with the
-applicable units, except for the height and width in pixels, which are always
-in pixels regardless.
+applicable units, except for the height and width in pixels and the total number
+of pixels, which are always in pixels regardless.
 <H3>Converting Units</H3>
 <P>To convert measures from one unit to the other, simply change the default
 units, then, <I>without reentering any data</I>, tap the “Calculate” button.
@@ -106,7 +106,7 @@ pixels and a 24-inch (61-cm) diagonal. What would be the diagonal for an extra-w
 9:21 aspect monitor with the same height?
 <P>First, enter the parameters for the 9:16 monitor and tap “Calculate”. All the fields
 should now be filled in. Next, clear just the width distance,
-width in pixels, diagonal distance, and aspect ratio fields. Enter the new aspect
+width in pixels, total pixels, diagonal distance, and aspect ratio fields. Enter the new aspect
 ratio of 9:21. Then press “Calculate”, and you will see the fields you cleared get
 recalculated for the new monitor. It should show a diagonal of almost exactly 76cm, or 30in,
 and a width of 2520 pixels. It will also reduce the 9:21 ratio to its lowest terms, 3:7.
