@@ -8,7 +8,7 @@ package nz.gen.geek_central.screencalc;
     them from each other. There should be nothing Android-specific
     in this source file.
 
-    Copyright 2013 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
+    Copyright 2013, 2014 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -44,7 +44,8 @@ public class Rules
         AspectRatio("aspect"),
         ViewingDistance("viewdist"),
         HeightPixels("heightpx"),
-        WidthPixels("widthpx");
+        WidthPixels("widthpx"),
+        TotalPixels("totalpx");
 
         public final String Name;
 
@@ -566,6 +567,22 @@ public class Rules
                     {
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.TotalPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Math.sqrt(Args[1] * Args[0]);
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.WidthPixels},
                             /*Calc =*/
                                 new CalcFunction()
@@ -593,6 +610,22 @@ public class Rules
                                       {
                                         return
                                             Args[1] * Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.TotalPixels, FieldName.WidthPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[0] / Args[1];
                                       } /*Calculate*/
                                   } /*CalcFunction*/
                           ),
@@ -626,6 +659,22 @@ public class Rules
                           ),
                         new ParamDef.Entry
                           (
+                            /*ArgNames =*/ new FieldName[] {FieldName.AspectRatio, FieldName.TotalPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Math.sqrt(Args[1] / Args[0]);
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
                             /*ArgNames =*/ new FieldName[] {FieldName.PixelDensity, FieldName.WidthMeasure},
                             /*Calc =*/
                                 new CalcFunction()
@@ -637,6 +686,50 @@ public class Rules
                                       {
                                         return
                                             Args[1] * Args[0];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.TotalPixels, FieldName.HeightPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[0] / Args[1];
+                                      } /*Calculate*/
+                                  } /*CalcFunction*/
+                          ),
+                    }
+              )
+          );
+        ParamDefs.put
+          (
+            FieldName.TotalPixels,
+            new ParamDef
+              (
+                /*Type =*/ ParamDef.ParamTypes.TYPE_PIXELS,
+                /*Parse =*/ new ParseInt(),
+                /*Calculate =*/ new ParamDef.Entry[]
+                    {
+                        new ParamDef.Entry
+                          (
+                            /*ArgNames =*/ new FieldName[] {FieldName.HeightPixels, FieldName.WidthPixels},
+                            /*Calc =*/
+                                new CalcFunction()
+                                  {
+                                    public double Calculate
+                                      (
+                                        double[] Args
+                                      )
+                                      {
+                                        return
+                                            Args[0] * Args[1];
                                       } /*Calculate*/
                                   } /*CalcFunction*/
                           ),

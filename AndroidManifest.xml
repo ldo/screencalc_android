@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nz.gen.geek_central.screencalc"
     android:versionCode="5"
-    android:versionName="16243.2"
+    android:versionName="16301.2"
 >
     <uses-sdk
         android:minSdkVersion="7"

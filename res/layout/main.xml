@@ -106,6 +106,34 @@
         android:layout_alignLeft="@id/clear_height_pixels"
         android:layout_below="@id/height_pixels"
     />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mul"
+        android:layout_toLeftOf="@id/width_pixels"
+        android:layout_alignBaseline="@id/width_pixels"
+    />
+
+    <EditText
+        style="@style/field"
+        android:hint="@string/px"
+        android:id="@+id/total_pixels"
+        android:layout_alignLeft="@id/width_pixels"
+        android:layout_below="@id/width_pixels"
+    />
+    <Button
+        style="@style/clr_button"
+        android:id="@+id/clear_total_pixels"
+        android:layout_alignLeft="@id/clear_width_pixels"
+        android:layout_below="@id/width_pixels"
+    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/eq"
+        android:layout_toLeftOf="@id/total_pixels"
+        android:layout_alignBaseline="@id/total_pixels"
+    />
 
     <EditText
         style="@style/field"

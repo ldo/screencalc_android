@@ -4,7 +4,7 @@ package nz.gen.geek_central.screencalc;
     width or diagonal in distance units, aspect ratio, pixel density,
     or height or width in pixels, try to calculate the rest.
 
-    Copyright 2013 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
+    Copyright 2013, 2014 Lawrence D'Oliveiro <ldo@geek-central.gen.nz>.
 
     This program is free software: you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -116,6 +116,11 @@ public class Main extends ActionActivity
           (
             FieldName.WidthPixels,
             new FieldDef(R.id.width_pixels, R.id.clear_width_pixels)
+          );
+        FieldDefs.put
+          (
+            FieldName.TotalPixels,
+            new FieldDef(R.id.total_pixels, R.id.clear_total_pixels)
           );
       }
 
