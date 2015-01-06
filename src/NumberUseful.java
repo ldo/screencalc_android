@@ -197,5 +197,5 @@ public class NumberUseful
           } /*FromReal*/
 
       } /*Fraction*/;
-    
+
   } /*NumberUseful*/;
